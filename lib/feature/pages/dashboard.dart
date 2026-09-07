@@ -15,7 +15,7 @@ import 'package:src_kstu_app/components/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:src_kstu_app/services/trending_news.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:src_kstu_app/feature/pages/error_pages/no_internet.dart';
 
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -58,7 +58,7 @@ class _DashboardState extends State<Dashboard>
     scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.fastOutSlowIn));
     getUser();
-    listenForPushNotifications(context);
+    // listenForPushNotifications(context);
 
     // pagination logic
     super.initState();
@@ -182,40 +182,40 @@ class _DashboardState extends State<Dashboard>
   // }
 
 // HANDING APP NOTIFICATIONS
-  void listenForPushNotifications(BuildContext context) {
-    // OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-    //   final data = result.notification.additionalData;
-    //   final announcemet_id = data!['announcemet_id'];
-    //   debugPrint("background notification announcemet_id $announcemet_id.");
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => DetailNews(title: announcemet_id),
-    //     ),
-    //   );
-    // });
+  // void listenForPushNotifications(BuildContext context) {
+  //   // OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+  //   //   final data = result.notification.additionalData;
+  //   //   final announcemet_id = data!['announcemet_id'];
+  //   //   debugPrint("background notification announcemet_id $announcemet_id.");
+  //   //   Navigator.push(
+  //   //     context,
+  //   //     MaterialPageRoute(
+  //   //       builder: (context) => DetailNews(title: announcemet_id),
+  //   //     ),
+  //   //   );
+  //   // });
 
-    OneSignal.shared.setNotificationWillShowInForegroundHandler(
-      (OSNotificationReceivedEvent notification) async {
-        // if (notification.notification.clicke) {
+  //   OneSignal.shared.setNotificationWillShowInForegroundHandler(
+  //     (OSNotificationReceivedEvent notification) async {
+  //       // if (notification.notification.clicke) {
 
-        final data = notification.notification.additionalData;
-        final announcemet_id = data!['announcemet_id'];
-        OneSignal.shared
-            .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-          // print('"OneSignal: notification opened: ${result}');
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailNews(title: announcemet_id),
-            ),
-          );
-        });
+  //       final data = notification.notification.additionalData;
+  //       final announcemet_id = data!['announcemet_id'];
+  //       OneSignal.shared
+  //           .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+  //         // print('"OneSignal: notification opened: ${result}');
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => DetailNews(title: announcemet_id),
+  //           ),
+  //         );
+  //       });
 
-        // }
-      },
-    );
-  }
+  //       // }
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -552,7 +552,7 @@ class _DashboardState extends State<Dashboard>
                                                                             ),
                                                                             Text(
                                                                               "${noticeboard[index].createdAtFormatted.split(', ')[1]}",
-                                                                              style: TextStyle(color: Colors.grey.shade300, fontSize: 15),
+                                                                              style: TextStyle(color: Colors.grey.shade300, fontSize: 12),
                                                                               maxLines: 1,
                                                                               overflow: TextOverflow.fade,
                                                                             ),

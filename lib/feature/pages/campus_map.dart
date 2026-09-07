@@ -120,275 +120,277 @@ class _CampusMapState extends State<CampusMap> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 18.0, vertical: 10),
-                                    child: Consumer<ConnectivityProvider>(
-                                       builder: (context, provider, _) {
-                                      if (provider.status ==
-                                          ConnectivityStatus.Offline) {
-                                        //
-                                        return noInternet();
+                            child: Consumer<ConnectivityProvider>(
+                                builder: (context, provider, _) {
+                              if (provider.status ==
+                                  ConnectivityStatus.Offline) {
+                                //
+                                return noInternet();
+                              } else {
+                                return FutureBuilder<List<CampusMapModel>>(
+                                    future: mapProvider.fetchNotice(widget.url),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CampusMapShimmer();
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                          // child: Text(snapshot.error.toString()),
+                                          child: noInternet(),
+                                        );
                                       } else {
-                                        return FutureBuilder<List<CampusMapModel>>(
-                                future: mapProvider.fetchNotice(widget.url),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CampusMapShimmer();
-                                  } else if (snapshot.hasError) {
-                                 
-                                    return Center(
-                                      // child: Text(snapshot.error.toString()),
-                                      child: noInternet(),
-                                    );
-                                  } else {
-                                    final campusmap = snapshot.data!;
-                                    return GridView.builder(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 4.0, horizontal: 2.0),
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              mainAxisSpacing: 16,
-                                              crossAxisSpacing: 10,
-                                              mainAxisExtent: 200,
-                                              childAspectRatio: 200),
-                                      itemCount: campusmap.length,
-                                      itemBuilder: (context, index) {
-                                        return InkWell(
-                                          onTap: () {
-                                            // setState(() {
-                                            //   isOpen = true;
-                                            // });
-                                            // I removed the stateless widget ShowBottomSheet Container into the showBottomsheet return;
-                                            showBottomSheet(
-                                                elevation: 10,
-                                                enableDrag: true,
-                                                context: context,
-                                                builder: (builder) => Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  40),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  40),
-                                                        ),
-                                                      ),
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height -
-                                                              50,
-                                                      width: double.infinity,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Column(
-                                                            children: [
-                                                              Stack(
-                                                                children: [
-                                                                  Container(
-                                                                    height: 235,
-                                                                    width: double
-                                                                        .infinity,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .only(
-                                                                        topLeft:
-                                                                            Radius.circular(10),
-                                                                        topRight:
-                                                                            Radius.circular(10),
-                                                                      ),
-                                                                      color:
-                                                                          topColor,
-                                                                      image:
-                                                                          DecorationImage(
-                                                                        image: NetworkImage(
-                                                                            "${landmark_imgs}${campusmap[index].image}"),
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Positioned(
-                                                                    right: 8,
-                                                                    top: 8,
-                                                                    child:
-                                                                        CircleAvatar(
-                                                                      backgroundColor:
-                                                                          Colors
-                                                                              .black.withOpacity(0.5),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            3.0),
-                                                                        child:
-                                                                            Center(
-                                                                              child: IconButton(
-                                                                                padding: EdgeInsets.zero,
-                                                                                                                                                        onPressed:
-                                                                                () {
-                                                                              setState(() {
-                                                                                isOpen = false;
-                                                                              });
-                                                                              Navigator.of(context).pop();
-                                                                                                                                                        },
-                                                                                                                                                        icon:
-                                                                                Icon(
-
-                                                                              Icons.close_outlined,
-                                                                              color:
-                                                                                  Colors.white,
-                                                                              size:
-                                                                                  25,
-                                                                                                                                                        ),
-                                                                                                                                                      ),
-                                                                            ),
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    top: 8,
-                                                                    left: 8),
-                                                            child: Text(
-                                                              campusmap[index]
-                                                                  .name,
-                                                              style: TextStyle(
-                                                                fontSize: 25,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Divider(),
-                                                          LandmarkContainer(
-                                                              title: campusmap[
-                                                                      index]
-                                                                  .id),
-                                                          Divider(),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    left: 20,
-                                                                    right: 20),
-                                                            child: InkWell(
-                                                              onTap: () =>
-                                                                  mylauntcher(
-                                                                      "https://www.google.com/maps?q=${campusmap[index].latitude},${campusmap[index].longitude}&zoom=18"),
-                                                              child: Container(
-                                                                height: 40,
-                                                                width: double
-                                                                    .infinity,
-                                                                decoration: BoxDecoration(
-                                                                    color:
-                                                                        topColor,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10)),
-                                                                child: Center(
-                                                                  child: Text(
-                                                                    "Navigate To",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize:
-                                                                            20,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  ),
+                                        final campusmap = snapshot.data!;
+                                        return GridView.builder(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 4.0, horizontal: 2.0),
+                                          gridDelegate:
+                                              SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 2,
+                                                  mainAxisSpacing: 16,
+                                                  crossAxisSpacing: 10,
+                                                  mainAxisExtent: 200,
+                                                  childAspectRatio: 200),
+                                          itemCount: campusmap.length,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                // setState(() {
+                                                //   isOpen = true;
+                                                // });
+                                                // I removed the stateless widget ShowBottomSheet Container into the showBottomsheet return;
+                                                showBottomSheet(
+                                                    elevation: 10,
+                                                    enableDrag: true,
+                                                    context: context,
+                                                    builder:
+                                                        (builder) => Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          40),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          40),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                          Spacer(),
-                                                        ],
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height -
+                                                                  50,
+                                                              width: double
+                                                                  .infinity,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Column(
+                                                                    children: [
+                                                                      Stack(
+                                                                        children: [
+                                                                          Container(
+                                                                            height:
+                                                                                235,
+                                                                            width:
+                                                                                double.infinity,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              borderRadius: BorderRadius.only(
+                                                                                topLeft: Radius.circular(10),
+                                                                                topRight: Radius.circular(10),
+                                                                              ),
+                                                                              color: topColor,
+                                                                              image: DecorationImage(
+                                                                                image: NetworkImage("${landmark_imgs}${campusmap[index].image}"),
+                                                                                fit: BoxFit.cover,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Positioned(
+                                                                            right:
+                                                                                8,
+                                                                            top:
+                                                                                8,
+                                                                            child:
+                                                                                CircleAvatar(
+                                                                              backgroundColor: Colors.black.withOpacity(0.5),
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.all(3.0),
+                                                                                child: Center(
+                                                                                  child: IconButton(
+                                                                                    padding: EdgeInsets.zero,
+                                                                                    onPressed: () {
+                                                                                      setState(() {
+                                                                                        isOpen = false;
+                                                                                      });
+                                                                                      Navigator.of(context).pop();
+                                                                                    },
+                                                                                    icon: Icon(
+                                                                                      Icons.close_outlined,
+                                                                                      color: Colors.white,
+                                                                                      size: 25,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        top: 8,
+                                                                        left:
+                                                                            8),
+                                                                    child: Text(
+                                                                      campusmap[
+                                                                              index]
+                                                                          .name,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            15,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                      ),
+                                                                      maxLines:
+                                                                          1, // Adjust the number of lines you want to allow before wrapping
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .visible,
+                                                                    ),
+                                                                  ),
+                                                                  Divider(),
+                                                                  LandmarkContainer(
+                                                                      title: campusmap[
+                                                                              index]
+                                                                          .id),
+                                                                  Divider(),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            20,
+                                                                        right:
+                                                                            20),
+                                                                    child:
+                                                                        InkWell(
+                                                                      onTap: () =>
+                                                                          mylauntcher(
+                                                                              "https://www.google.com/maps?q=${campusmap[index].latitude},${campusmap[index].longitude}&zoom=18"),
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            40,
+                                                                        width: double
+                                                                            .infinity,
+                                                                        decoration: BoxDecoration(
+                                                                            color:
+                                                                                topColor,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10)),
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Text(
+                                                                            "Navigate To",
+                                                                            style: TextStyle(
+                                                                                color: Colors.white,
+                                                                                fontSize: 20,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                ],
+                                                              ),
+                                                            ));
+                                              },
+                                              child: isOpen
+                                                  ? Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Color.fromARGB(
+                                                            255, 187, 185, 185),
                                                       ),
-                                                    ));
-                                          },
-                                          child: isOpen
-                                              ? Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    color: Color.fromARGB(
-                                                        255, 187, 185, 185),
-                                                  ),
-                                                )
-                                              : Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: topColor),
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        height: 140,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
+                                                    )
+                                                  : Container(
+                                                      decoration: BoxDecoration(
                                                           borderRadius:
-                                                              BorderRadius.only(
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: topColor),
+                                                      child: Column(
+                                                        children: [
+                                                          Container(
+                                                            height: 140,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius: BorderRadius.only(
                                                                   topLeft: Radius
                                                                       .circular(
                                                                           10),
                                                                   topRight: Radius
                                                                       .circular(
                                                                           10)),
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                                // ignore: unnecessary_null_comparison
-                                                                campusmap[index]
-                                                                            .image !=
-                                                                        null
-                                                                    ? "${landmark_imgs}${campusmap[index].image}"
-                                                                    : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
-                                                            fit: BoxFit.cover,
+                                                              image:
+                                                                  DecorationImage(
+                                                                image:
+                                                                    NetworkImage(
+                                                                        // ignore: unnecessary_null_comparison
+                                                                        campusmap[index].image !=
+                                                                                null
+                                                                            ? "${landmark_imgs}${campusmap[index].image}"
+                                                                            : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
                                                           ),
-                                                        ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            campusmap[index]
+                                                                .name,
+                                                                 textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                             maxLines: 1, // Adjust the number of lines you want to allow before wrapping
+  overflow: TextOverflow.ellipsis,
+                                                          )
+                                                        ],
                                                       ),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Text(
-                                                        campusmap[index].name,
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
+                                                    ),
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
-                                  }
-                                });
                                       }
-                                       }
-                                    ),
-                           
+                                    });
+                              }
+                            }),
                           ),
                         ),
                       ),

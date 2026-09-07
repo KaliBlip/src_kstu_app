@@ -176,16 +176,16 @@ class _DetailNewsState extends State<DetailNews> {
                                               color: Colors.white,
                                               size: 30,
                                             ))),
-                                    Positioned(
-                                        top: 10,
-                                        right: 10,
-                                        child: GestureDetector(
-                                            onTap: () {},
-                                            child: Icon(
-                                              CupertinoIcons.bookmark,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ))),
+                                    // Positioned(
+                                    //     top: 10,
+                                    //     right: 10,
+                                    //     child: GestureDetector(
+                                    //         onTap: () {},
+                                    //         child: Icon(
+                                    //           CupertinoIcons.bookmark,
+                                    //           color: Colors.white,
+                                    //           size: 30,
+                                    //         ))),
                                   ],
                                 ),
                               ),
@@ -245,7 +245,7 @@ class _DetailNewsState extends State<DetailNews> {
                                                   width: 5,
                                                 ),
                                                 Container(
-                                                  width: 100,
+                                                  width: 200,
                                                   child: Text(
                                                     '${trend.createdAtFormatted.split(', ')[1]}',
                                                     maxLines: 2,

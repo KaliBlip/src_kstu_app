@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 import 'package:notification_permissions/notification_permissions.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 // 052141350070  SHANI IDDI
 class LoginPage extends StatefulWidget {
@@ -87,46 +87,46 @@ class _LoginPageState extends State<LoginPage> {
             await NotificationPermissions.requestNotificationPermissions();
         if (requestResponse == PermissionStatus.granted) {
           // user granted permission
-          registerUserForPushNotification();
+          // registerUserForPushNotification();
           return;
         }
       });
     } else {
-      registerUserForPushNotification();
+      // registerUserForPushNotification();
     }
   }
 
-  void registerUserForPushNotification() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
+  // void registerUserForPushNotification() async {
+  //   SharedPreferences localStorage = await SharedPreferences.getInstance();
 
-    var user_id = localStorage.getInt('id');
-    print("in dashboard!: ${user_id}");
+  //   var user_id = localStorage.getInt('id');
+  //   print("in dashboard!: ${user_id}");
 
-    var myCustomUniqueUserId = "${user_id}";
-    //await OneSignal.shared.removeExternalUserId();
-    final setExtPushIdResponse =
-        await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
-    debugPrint(
-        "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
+  //   var myCustomUniqueUserId = "${user_id}";
+  //   //await OneSignal.shared.removeExternalUserId();
+  //   final setExtPushIdResponse =
+  //       await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
+  //   debugPrint(
+  //       "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
 
-    if (setExtPushIdResponse['push']['success'] != null) {
-      if (setExtPushIdResponse['push']['success'] is bool) {
-        // ignore: unused_local_variable
-        final status = setExtPushIdResponse['push']['success'] as bool;
-        // if (status) {
-        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
-        // }
-      } else if (setExtPushIdResponse['push']['success'] is int) {
-        // ignore: unused_local_variable
-        final status = setExtPushIdResponse['push']['success'] as int;
-        // if (status == 1) {
-        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
-        // }
-      }
-      debugPrint(
-          "registered for push: ${setExtPushIdResponse['push']['success']}");
-    }
-  }
+  //   if (setExtPushIdResponse['push']['success'] != null) {
+  //     if (setExtPushIdResponse['push']['success'] is bool) {
+  //       // ignore: unused_local_variable
+  //       final status = setExtPushIdResponse['push']['success'] as bool;
+  //       // if (status) {
+  //       //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
+  //       // }
+  //     } else if (setExtPushIdResponse['push']['success'] is int) {
+  //       // ignore: unused_local_variable
+  //       final status = setExtPushIdResponse['push']['success'] as int;
+  //       // if (status == 1) {
+  //       //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
+  //       // }
+  //     }
+  //     debugPrint(
+  //         "registered for push: ${setExtPushIdResponse['push']['success']}");
+  //   }
+  // }
 
   void _loginUser() async {
     var connectivityResult = await (Connectivity().checkConnectivity());

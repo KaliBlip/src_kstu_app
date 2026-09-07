@@ -258,7 +258,7 @@ Future<dynamic> successImageUploadDialog(){
                   showModalBottomSheet(
                       context: context, builder: (builder) => bottomSheet());
                 },
-                child: Icon(Icons.camera_alt, color: Colors.white, size: 30.0)))
+                child: Icon(Icons.camera_alt, color: Colors.black, size: 30.0)))
       ]),
     );
   }

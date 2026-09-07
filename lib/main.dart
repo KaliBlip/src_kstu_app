@@ -7,13 +7,13 @@ import 'package:src_kstu_app/services/notice_board.dart';
 import 'package:src_kstu_app/services/trending_news.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void main() {
   //Remove this method to stop OneSignal Debugging
   // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   WidgetsFlutterBinding.ensureInitialized();
-  OneSignal.shared.setAppId("a8a3a92a-86cd-41b5-8efe-2e5badaf01d0");
+  // OneSignal.shared.setAppId("a8a3a92a-86cd-41b5-8efe-2e5badaf01d0");
 
 
 

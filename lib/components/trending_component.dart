@@ -346,7 +346,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
                               ),
                               Container(
                                 // ============= Increasing the width of the Container to display the full date length
-                                width: 140,
+                                width: 180,
                                 child: Text(
                                   '${trend[index].createdAtFormatted.split(', ')[1]}',
                                   maxLines: 1,
