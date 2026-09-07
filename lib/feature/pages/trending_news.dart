@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 import 'package:src_kstu_app/components/trending_component.dart';
 import 'package:src_kstu_app/feature/pages/error_pages/no_internet.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 
 class TrendingNewsPage extends StatefulWidget {
   const TrendingNewsPage({super.key});
@@ -79,18 +79,18 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
   @override
   Widget build(BuildContext context) {
     // ignore: unused_local_variable
-    SimpleFontelicoProgressDialog _dialog =
+    SimpleFontelicoProgressDialog dialog =
         SimpleFontelicoProgressDialog(context: context);
-        final trendProvider =
+    final trendProvider =
         Provider.of<TrendingNewsProvider>(context, listen: false);
-        
+
     return Scaffold(
       backgroundColor: topColor,
       body: SafeArea(
           child: Center(
         child: Padding(
           padding: const EdgeInsets.all(0.0),
-          child: Container(
+          child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Stack(
               children: [
@@ -131,9 +131,9 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                   size: 25,
                                 ),
                               ),
-                              const Text(
+                              Text(
                                 "Trending News",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                     color: bottomColor,
                                     fontSize: 25,
                                     fontWeight: FontWeight.bold),
@@ -143,7 +143,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                         ]),
                       ),
                     )),
-                   Expanded(
+                    Expanded(
                         flex: 9,
                         child: Consumer<ConnectivityProvider>(
                             builder: (context, provider, _) {
@@ -167,55 +167,42 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                 width: double.infinity,
                                 decoration: const BoxDecoration(
                                     color: bottomColor,
-                                // color: Colors.red,
+                                    // color: Colors.red,
 
                                     borderRadius: BorderRadius.only(
                                         topRight: Radius.circular(30))),
                                 child: ListView(
-                                            physics: BouncingScrollPhysics(),
-                                            
-
-                                  children: [Container(
-                                    height: MediaQuery.of(context).size.height,
-                                    child: FutureBuilder<List<Announcement>>(
-                                        future: trendProvider.fetchTrend(1),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return TrendingShimmer();
-                                          } else if (snapshot.hasError) {
-                                            // logout().then((value) => {
-                                            //       Navigator.of(context)
-                                            //           .pushAndRemoveUntil(
-                                            //               MaterialPageRoute(
-                                            //                   builder: (context) =>
-                                            //                       LoginPage()),
-                                            //               (route) => false)
-                                            //     });
-                                            // return Text("${snapshot.error}");
-                                            return noInternet();
-                                          } else {
-                                            // return ListView.builder(
-                                            //     controller: _scrollController,
-                                            //     physics: BouncingScrollPhysics(),
-                                            //     itemCount:
-                                            //         trendProvider.trend.length,
-                                            //     scrollDirection: Axis.vertical,
-                                            //     itemBuilder: (context, index) {
-                                                   final trend =
-                                                      trendProvider.trend;
-                                                  return Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: TrendingComponent(
-                                                        showRefresh: true,
-                                                      
-                                                      gottenData: trend,page: 2,hasLimit: false,isTrending:true),
-                                                  );
-                                                
-                                          }
-                                        }),
-                                  ),]
-                                ));
+                                    physics: BouncingScrollPhysics(),
+                                    children: [
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height,
+                                        child: FutureBuilder<
+                                                List<Announcement>>(
+                                            future: trendProvider.fetchTrend(1),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return TrendingShimmer();
+                                              } else if (snapshot.hasError) {
+                                                return noInternet();
+                                              } else {
+                                                final trend =
+                                                    trendProvider.trend;
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: TrendingComponent(
+                                                      showRefresh: true,
+                                                      gottenData: trend,
+                                                      page: 2,
+                                                      hasLimit: false,
+                                                      isTrending: true),
+                                                );
+                                              }
+                                            }),
+                                      ),
+                                    ]));
                           }
                         }))
                   ],

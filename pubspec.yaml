@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.2.2+6
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -38,9 +38,9 @@ dependencies:
   image_picker: ^0.8.6+2
   http: ^0.13.5
   shared_preferences: ^2.0.17
-  provider: ^6.0.5
+  flutter_riverpod: ^2.4.9
+  riverpod_annotation: ^2.3.3
   shimmer: ^2.0.0
-  # onesignal_flutter: ^3.5.0
   notification_permissions: ^0.6.1
   font_awesome_flutter: ^10.4.0
   flutter_spinkit: ^5.2.0
@@ -54,11 +54,27 @@ dependencies:
   awesome_snackbar_content: ^0.1.3
   url_launcher: ^6.3.0
   path: ^1.9.0
+  flutter_staggered_grid_view: ^0.7.0
+  onesignal_flutter: ^5.3.3
+  google_fonts: ^4.0.4
+  flutter_linkify: ^6.0.0
+  gallery_saver: ^2.3.2
+  permission_handler: ^11.3.1
+  path_provider: ^2.1.5
+  dio: ^5.4.3
+  connectivity_plus: ^7.0.0
+  fluttertoast: ^9.0.0
+  share_plus: ^12.0.1
+  file_picker: ^10.3.7
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.13.1"
+  riverpod_generator: ^2.3.9
+  build_runner: ^2.4.7
+  json_annotation: ^4.8.1
 
 flutter_launcher_icons:
   ios: true
@@ -114,3 +130,17 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+
+flutter_native_splash:
+  color: "#4E489C"
+  color_dark: "#4E489C"
+  
+  image: assets/images/f.png
+  
+  ios: true
+  branding_mode: bottom
+  
+  android: true
+  
+  web: false

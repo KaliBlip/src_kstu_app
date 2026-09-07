@@ -1,37 +1,31 @@
 import 'package:src_kstu_app/components/side_menu.dart';
-import 'package:src_kstu_app/services/connectivity_provider.dart';
-import 'package:src_kstu_app/feature/pages/news_details.dart';
-import 'package:src_kstu_app/feature/pages/notice_board_shimmer.dart';
-import 'package:src_kstu_app/feature/pages/notice_board.dart';
-import 'package:src_kstu_app/feature/pages/trending_shimmer.dart';
-import 'package:src_kstu_app/feature/pages/user_profile.dart';
 import 'package:src_kstu_app/models/announcement.dart';
 import 'package:src_kstu_app/models/constant.dart';
-import 'package:src_kstu_app/services/notice_board.dart';
-import 'package:src_kstu_app/components/trending_component.dart';
-import 'package:flutter/gestures.dart';
+import 'package:src_kstu_app/providers/notice_board_provider.dart';
+import 'package:src_kstu_app/providers/trending_news_provider.dart';
+import 'package:src_kstu_app/feature/pages/news_details.dart';
+import 'package:src_kstu_app/feature/pages/notice_board_shimmer.dart';
+import 'package:src_kstu_app/feature/pages/trending_shimmer.dart';
+import 'package:src_kstu_app/feature/pages/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:src_kstu_app/components/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:src_kstu_app/services/trending_news.dart';
-// import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:src_kstu_app/feature/pages/error_pages/no_internet.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:src_kstu_app/utils/announcement_sort.dart';
 
-import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
-
-// Make some changes /  Push to github on Date: 04/06/2023 Time:03:55am
-
-class Dashboard extends StatefulWidget {
+class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({super.key});
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  ConsumerState<Dashboard> createState() => _DashboardState();
 }
 
-// test
-class _DashboardState extends State<Dashboard>
+class _DashboardState extends ConsumerState<Dashboard>
     with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var name;
   var index;
   var image;
@@ -41,12 +35,9 @@ class _DashboardState extends State<Dashboard>
   late Animation<double> scaleAnimation;
   bool isLoading = false;
 
-  // final trendingScrollController = ScrollController();
   @override
   initState() {
     _checkConnectivity();
-    // requestNotificationPermission_();
-    ConnectivityProvider();
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -57,23 +48,21 @@ class _DashboardState extends State<Dashboard>
         parent: _animationController, curve: Curves.fastOutSlowIn));
     scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.fastOutSlowIn));
-    getUser();
-    // listenForPushNotifications(context);
 
-    // pagination logic
+    // Use post-frame callback to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        getUser();
+        requestNotificationPermission(context);
+        listenForPushNotifications(context);
+      }
+    });
+
     super.initState();
-    // trendingScrollController.addListener(() {
-    //   if (trendingScrollController.position.maxScrollExtent ==
-    //       trendingScrollController.offset) {
-    //     // checking if end of list is
-    //   }
-    // });
   }
 
-  Future<void> _checkConnectivity() async {
-    // final ConnectivityResult result = await Connectivity().checkConnectivity();
-    // _connectivityProvider.updateConnectionStatus(result);
-  }
+  Future<void> _checkConnectivity() async {}
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -82,637 +71,489 @@ class _DashboardState extends State<Dashboard>
 
   bool isSideBarClosed = true;
   bool isSideMenuClosed = true;
+  bool _hasRequestedPermission = false;
+  static bool _pushListenerRegistered = false;
 
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    setState(() {
-      name = localStorage.getString('name');
-      index = localStorage.getInt('index');
-      image = localStorage.getString('user_img');
-      id = localStorage.getInt('id');
-    });
+    if (mounted) {
+      setState(() {
+        name = localStorage.getString('name');
+        index = localStorage.getInt('index');
+        image = localStorage.getString('user_img');
+        id = localStorage.getInt('id');
+      });
+    }
   }
 
-  // showAlertDialog(BuildContext context, Function() runthis) {
-  //   // set up the button
-  //   Widget okButton = TextButton(
-  //     child: Text("OK,cool am all in!"),
-  //     onPressed: runthis,
-  //   );
+  Future<bool?> _showPrePermissionDialog(BuildContext context) async {
+    if (!context.mounted) return false;
 
-  //   // set up the AlertDialog
-  //   AlertDialog alert = AlertDialog(
-  //     title: Text("Receive notification alerts"),
-  //     content: Text(
-  //         'This app would like to send you push notifications when there is any activity on campus'),
-  //     actions: [
-  //       okButton,
-  //     ],
-  //   );
-
-  //   // show the dialog
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return alert;
-  //     },
-  //   );
-  // }
-
-  // void requestNotificationPermission_() async {
-  //   // open prompt for user to enable notification
-  //   PermissionStatus permissionStatus =
-  //       await NotificationPermissions.getNotificationPermissionStatus();
-  //   // if(permissionStatus == PermissionStatus.denied) {
-  //   //   // if user explicitly denied notifications, we don't want to show them again
-  //   //   return;
-  //   // }
-
-  //   if (permissionStatus != PermissionStatus.granted) {
-  //     if (!mounted) return;
-
-  //     // showConfirmDialog(context, title: 'Receive notification alerts',
-  //     //   subtitle: 'This app would like to send you push notifications when there is any activity on your account',
-  //     //   onConfirmTapped: () async {
-  //     //     }
-  //     //   },
-  //     // );
-  //     showAlertDialog(context, () async {
-  //       final requestResponse =
-  //           await NotificationPermissions.requestNotificationPermissions();
-  //       if (requestResponse == PermissionStatus.granted) {
-  //         // user granted permission
-  //         registerUserForPushNotification();
-  //         return;
-  //       }
-  //     });
-  //   } else {
-  //     registerUserForPushNotification();
-  //   }
-  // }
-
-  // void registerUserForPushNotification() async {
-  //   SharedPreferences localStorage = await SharedPreferences.getInstance();
-
-  //   var user_id = localStorage.getInt('userId');
-  //   print("in dashboard!: ${user_id}");
-
-  //   var myCustomUniqueUserId = "${user_id}";
-  //   //await OneSignal.shared.removeExternalUserId();
-  //   final setExtPushIdResponse =
-  //       await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
-  //   debugPrint(
-  //       "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
-
-  //   if (setExtPushIdResponse['push']['success'] != null) {
-  //     if (setExtPushIdResponse['push']['success'] is bool) {
-  //       final status = setExtPushIdResponse['push']['success'] as bool;
-  //       // if (status) {
-  //       //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
-  //       // }
-  //     } else if (setExtPushIdResponse['push']['success'] is int) {
-  //       final status = setExtPushIdResponse['push']['success'] as int;
-  //       // if (status == 1) {
-  //       //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
-  //       // }
-  //     }
-  //     debugPrint(
-  //         "registered for push: ${setExtPushIdResponse['push']['success']}");
-  //   }
-  // }
-
-// HANDING APP NOTIFICATIONS
-  // void listenForPushNotifications(BuildContext context) {
-  //   // OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-  //   //   final data = result.notification.additionalData;
-  //   //   final announcemet_id = data!['announcemet_id'];
-  //   //   debugPrint("background notification announcemet_id $announcemet_id.");
-  //   //   Navigator.push(
-  //   //     context,
-  //   //     MaterialPageRoute(
-  //   //       builder: (context) => DetailNews(title: announcemet_id),
-  //   //     ),
-  //   //   );
-  //   // });
-
-  //   OneSignal.shared.setNotificationWillShowInForegroundHandler(
-  //     (OSNotificationReceivedEvent notification) async {
-  //       // if (notification.notification.clicke) {
-
-  //       final data = notification.notification.additionalData;
-  //       final announcemet_id = data!['announcemet_id'];
-  //       OneSignal.shared
-  //           .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-  //         // print('"OneSignal: notification opened: ${result}');
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => DetailNews(title: announcemet_id),
-  //           ),
-  //         );
-  //       });
-
-  //       // }
-  //     },
-  //   );
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    SimpleFontelicoProgressDialog _dialog =
-        SimpleFontelicoProgressDialog(context: context);
-    final noticeProvider =
-        Provider.of<NoticeBoardProvider>(context, listen: false);
-    final trendProvider =
-        Provider.of<TrendingNewsProvider>(context, listen: false);
-    return Scaffold(
-        backgroundColor: topColor,
-        extendBody: true,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: topColor,
-          title: Semantics(
-            label: "AppBar Content",
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "${name}",
-                  style: TextStyle(
-                      color: bottomColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "${index}",
-                  style: TextStyle(color: Colors.white, fontSize: 15),
-                )
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Stay Updated!'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('We need your permission to send you important updates and notifications.'),
+                Text('Would you like to enable notifications?'),
               ],
             ),
           ),
-          leading: Builder(
-            builder: (context) {
-              return GestureDetector(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Container(
-                    margin: EdgeInsets.only(left: 16, top: 17),
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0, 3),
-                              blurRadius: 8)
-                        ]),
-                    child: Icon(Icons.menu)),
-              );
-            }
-          ),
-          actions: [
-            GestureDetector(
-              onTap: () async {
-                _dialog.show(
-                    message: 'Waiting...',
-                    type: SimpleFontelicoProgressDialogType.hurricane);
-                await Future.delayed(Duration(seconds: 1));
-                _dialog.hide();
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserProfilePage()));
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Not now'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false);
               },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 18, right: 15),
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 24,
-                      minRadius: 24,
-                      backgroundColor: bottomColor,
-                      backgroundImage: image != "1"
-                          ? NetworkImage("${user_img_uri}${image}")
-                          : NetworkImage(
-                              "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
-                    ),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: CircleAvatar(
-                        minRadius: 7,
-                        maxRadius: 7,
-                        backgroundColor: Colors.red,
-                      ),
-                    )
-                  ],
+            ),
+            TextButton(
+              child: const Text('Allow'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void requestNotificationPermission(BuildContext context) async {
+    if (_hasRequestedPermission) return;
+    _hasRequestedPermission = true;
+
+    // Already granted at the OS level – nothing to ask.
+    if (OneSignal.Notifications.permission) return;
+
+    // Only show our pre-permission dialog once, ever. After the user has
+    // answered it we respect their choice instead of nagging on every visit.
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('asked_notification_permission') == true) return;
+
+    if (!context.mounted) return;
+    final shouldRequest = await _showPrePermissionDialog(context);
+    await prefs.setBool('asked_notification_permission', true);
+    if (shouldRequest == true) {
+      await OneSignal.Notifications.requestPermission(true);
+    }
+  }
+
+  void listenForPushNotifications(BuildContext context) {
+    // Guard against registering a duplicate listener each time a new Dashboard
+    // instance is pushed (which would navigate once per stale listener).
+    if (_pushListenerRegistered) return;
+    _pushListenerRegistered = true;
+
+    OneSignal.Notifications.addClickListener((event) {
+      final data = event.notification.additionalData;
+      if (data != null && data['announcemet_id'] != null) {
+        final announcementId = data['announcemet_id'];
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailNews(title: announcementId),
+          ),
+        );
+      }
+    });
+  }
+
+  void _openAnnouncement(int announcementId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DetailNews(title: announcementId)),
+    );
+  }
+
+  String _formatDate(String formatted) {
+    if (formatted.isEmpty) return '';
+    final parts = formatted.split(', ');
+    return parts.length > 1 ? parts[1] : formatted;
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: topColor,
+      resizeToAvoidBottomInset: false,
+      drawer: SideMenu(),
+      body: Column(
+        children: [
+          _buildHeader(),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: bottomColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
                 ),
               ),
-            )
-          ],
-        ),
-        drawer: SideMenu(),
-        body: Semantics(
-          label: "Dashboard Page",
-          child: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(0),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height,
-                      child: Stack(children: [
-                        Row(children: [
-                          Container(
-                            color: bottomColor,
-                            width: MediaQuery.of(context).size.width / 2,
-                          ),
-                          Container(
-                            color: topColor,
-                            width: MediaQuery.of(context).size.width / 2,
-                          ),
-                        ]),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 25,
-                              decoration: const BoxDecoration(
-                                  color: topColor,
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(30))),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 9,
-                              child: Consumer<ConnectivityProvider>(
-                                  builder: (context, provider, _) {
-                                if (provider.status ==
-                                    ConnectivityStatus.Offline) {
-                                  //
-                                  return Container(
-                                      width: double.infinity,
-                                      height:
-                                          MediaQuery.of(context).size.height -
-                                              250,
-                                      decoration: BoxDecoration(
-                                          color: bottomColor,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(30))),
-                                      child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0, vertical: 18.0),
-                                          child: Container(
-                                            width: double.infinity,
-                                            // height: 300,
-                                            decoration: BoxDecoration(
-                                              color: topColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              image: DecorationImage(
-                                                image: ExactAssetImage(
-                                                    'assets/images/wayera.png'),
-                                                fit: BoxFit.fitWidth,
-                                              ),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  alignment: Alignment.center,
-                                                  height: 200,
-                                                  // color:Colors.red,
-                                                  child: Text(
-                                                    'Aww snap, no internet connection!',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )));
-                                } else {
-                                  return Container(
-                                    width: double.infinity,
-                                    height:
-                                        MediaQuery.of(context).size.height - 50,
-                                    decoration: const BoxDecoration(
-                                        color: bottomColor,
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(30))),
-                                    child: NestedScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        physics: BouncingScrollPhysics(),
-                                        dragStartBehavior:
-                                            DragStartBehavior.start,
-                                        headerSliverBuilder:
-                                            (context, innerBoxIsScrolled) {
-                                          return [];
-                                        },
-                                        body: ListView(
-                                          scrollDirection: Axis.vertical,
-                                          children: [
-                                            const Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10.0,
-                                                  vertical: 15.0),
-                                              child: Text(
-                                                "Notice Board",
-                                                style: TextStyle(
-                                                    color: topColor,
-                                                    fontSize: 25,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            FutureBuilder<List<Announcement>>(
-                                              future:
-                                                  noticeProvider.fetchNotice(1),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 10.0),
-                                                      child: Container(
-                                                          height: 243,
-                                                          child:
-                                                              NoticeBoardShimmer()));
-                                                } else if (snapshot.hasError) {
-                                                  return Center();
-                                                } else {
-                                                  final noticeboard =
-                                                      snapshot.data!;
-                                                  return Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 10.0),
-                                                    child: Container(
-                                                      height: 250,
-                                                      child: ListView.builder(
-                                                        physics:
-                                                            BouncingScrollPhysics(),
-                                                        itemCount:
-                                                            noticeboard.length +
-                                                                1,
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return index !=
-                                                                  noticeboard
-                                                                      .length
-                                                              ? GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    _dialog.show(
-                                                                        message:
-                                                                            'Waiting...',
-                                                                        type: SimpleFontelicoProgressDialogType
-                                                                            .hurricane);
-                                                                    await Future.delayed(Duration(
-                                                                        seconds:
-                                                                            1));
-                                                                    _dialog
-                                                                        .hide();
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: ((context) =>
-                                                                                DetailNews(title: noticeboard[index].id))));
-                                                                  },
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .only(
-                                                                      right:
-                                                                          15.0,
-                                                                    ),
-                                                                    child:
-                                                                        Container(
-                                                                      width:
-                                                                          160,
-                                                                      height:
-                                                                          150,
-                                                                      decoration: BoxDecoration(
-                                                                          color:
-                                                                              topColor,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(10)),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            8.0),
-                                                                        child:
-                                                                            Column(
-                                                                          // mainAxisAlignment: MainAxisAlignment.center,
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Container(
-                                                                              width: double.infinity,
-                                                                              height: 130,
-                                                                              //
-                                                                              // ignore: unnecessary_null_comparison
-                                                                              decoration: BoxDecoration(image: noticeboard[index].featuredImage != null ? DecorationImage(image: NetworkImage("${announcement_imgUri}${noticeboard[index].featuredImage}"), fit: BoxFit.fill) : DecorationImage(image: NetworkImage("https://cdn-icons-png.flaticon.com/512/3135/3135715.png"), fit: BoxFit.fill), color: topColor, borderRadius: BorderRadius.circular(10)),
-                                                                            ),
-                                                                            const SizedBox(
-                                                                              height: 15,
-                                                                            ),
-                                                                            Text(
-                                                                              "${noticeboard[index].title.trim()}",
-                                                                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17.5),
-                                                                              maxLines: 1,
-                                                                              overflow: TextOverflow.ellipsis,
-                                                                            ),
-                                                                            const SizedBox(
-                                                                              height: 20,
-                                                                            ),
-                                                                            Text(
-                                                                              "${noticeboard[index].createdAtFormatted.split(', ')[1]}",
-                                                                              style: TextStyle(color: Colors.grey.shade300, fontSize: 12),
-                                                                              maxLines: 1,
-                                                                              overflow: TextOverflow.fade,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              : noticeboard
-                                                                          .length >=
-                                                                      10
-                                                                  ? Container(
-                                                                      width: 50,
-                                                                      height:
-                                                                          50,
-                                                                      child:
-                                                                          DecoratedBox(
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          shape:
-                                                                              BoxShape.circle,
-                                                                          border:
-                                                                              Border.all(
-                                                                            color:
-                                                                                topColor,
-                                                                            width:
-                                                                                2.0,
-                                                                          ),
-                                                                        ),
-                                                                        child:
-                                                                            InkWell(
-                                                                          onTap:
-                                                                              () {
-                                                                            Navigator.of(context).push(
-                                                                              MaterialPageRoute(builder: (context) => AllNoticeBoardPage()),
-                                                                            );
-                                                                          },
-                                                                          child:
-                                                                              Center(
-                                                                            child:
-                                                                                const Icon(
-                                                                              Icons.arrow_forward_ios,
-                                                                              color: topColor,
-                                                                              size: 25,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    )
-                                                                  : Container();
-                                                        },
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                            const SizedBox(
-                                              height: 18,
-                                            ),
-                                            const Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 15.0,
-                                                  horizontal: 10.0),
-                                              child: Text(
-                                                "What's trending?",
-                                                style: TextStyle(
-                                                    color: topColor,
-                                                    fontSize: 25,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            FutureBuilder<List<Announcement>>(
-                                              // initialData: [],
-                                              future:
-                                                  trendProvider.fetchTrend(1),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return TrendingShimmer();
-                                                } else if (snapshot.hasError) {
-                                                  // logout()
-                                                  //     .then((value) => {
-                                                  //           Navigator.of(context).pushAndRemoveUntil(
-                                                  //               MaterialPageRoute(
-                                                  //                   builder: (context) =>
-                                                  //                       LoginPage()),
-                                                  //               (route) =>
-                                                  //                   false)
-                                                  //         });
-                                                  return noInternet();
-                                                } else {
-                                                  final trend = snapshot.data!;
-
-                                                  return TrendingComponent(
-                                                      gottenData: trend,
-                                                      showRefresh: false,
-                                                      page: 2,
-                                                      hasLimit: true,
-                                                      isTrending: true);
-                                                }
-                                              },
-                                            )
-                                          ],
-                                        )),
-                                  );
-                                }
-                              }),
-                            ),
-                          ],
-                        )
-                      ]),
-                    ),
-                  ],
-                ),
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 32),
+                children: [
+                  _sectionTitle('Notice Board'),
+                  _noticeBoardSection(),
+                  const SizedBox(height: 6),
+                  _sectionTitle("What's trending?"),
+                  _trendingSection(),
+                ],
               ),
             ),
           ),
-        ));
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 22),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () => _scaffoldKey.currentState?.openDrawer(),
+              child: Container(
+                width: 46,
+                height: 46,
+                decoration: const BoxDecoration(
+                  color: bottomColor,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.menu, color: topColor, size: 26),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "$name",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      color: bottomColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "$index",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            HeadPicture(image: image),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+      child: Text(
+        title,
+        style: GoogleFonts.poppins(
+          color: topColor,
+          fontSize: 26,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _noticeBoardSection() {
+    final noticesStream = ref.watch(noticeBoardAutoRefreshProvider(1));
+    return noticesStream.when(
+      data: (notices) {
+        if (notices.isEmpty) {
+          return _emptyState('No notices yet');
+        }
+        final sorted = sortAnnouncementsByNewest(notices);
+        final cardWidth = MediaQuery.of(context).size.width * 0.44;
+        return SizedBox(
+          height: 300,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            itemCount: sorted.length,
+            itemBuilder: (context, i) => _noticeCard(sorted[i], cardWidth),
+          ),
+        );
+      },
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        child: NoticeBoardShimmer(),
+      ),
+      error: (error, stack) => _emptyState('Could not load notices'),
+    );
+  }
+
+  Widget _noticeCard(Announcement notice, double width) {
+    return GestureDetector(
+      onTap: () => _openAnnouncement(notice.id),
+      child: Container(
+        width: width,
+        margin: const EdgeInsets.only(right: 14, top: 4, bottom: 10),
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: topColor,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(18)),
+              child: _netImage(
+                "$announcement_imgUri${notice.featuredImage}",
+                height: 150,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    notice.title.trim(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      color:  Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    _formatDate(notice.createdAtFormatted),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 12.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _trendingSection() {
+    final trendsStream = ref.watch(trendingNewsAutoRefreshProvider(1));
+    return trendsStream.when(
+      data: (trends) {
+        if (trends.isEmpty) {
+          return _emptyState('Nothing trending right now');
+        }
+        final sorted = sortAnnouncementsByNewest(trends);
+        return ListView.builder(
+          shrinkWrap: true,
+          primary: false,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
+          itemCount: sorted.length,
+          itemBuilder: (context, i) => _trendingCard(
+            sorted[i],
+            isLast: i == sorted.length - 1,
+          ),
+        );
+      },
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        child: TrendingShimmer(),
+      ),
+      error: (error, stack) => _emptyState('Could not load trending news'),
+    );
+  }
+
+  Widget _trendingCard(Announcement trend, {required bool isLast}) {
+    return GestureDetector(
+      onTap: () => _openAnnouncement(trend.id),
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 18),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: _netImage(
+              "$announcement_imgUri${trend.featuredImage}",
+              height: 240,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            trend.title.trim(),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 18,
+              height: 1.25,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              const FaIcon(FontAwesomeIcons.clock, color: headColor, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                _formatDate(trend.createdAtFormatted),
+                style: GoogleFonts.poppins(
+                  color: headColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Spacer(),
+              const FaIcon(FontAwesomeIcons.eye, color: headColor, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                trend.viewsCountFormatted,
+                style: GoogleFonts.poppins(
+                  color: headColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          if (!isLast)
+            Divider(color: Colors.grey.shade300, thickness: 1, height: 1),
+        ],
+      ),
+    );
+  }
+
+  Widget _netImage(String url, {required double height}) {
+    return Image.network(
+      url,
+      height: height,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      loadingBuilder: (context, child, progress) {
+        if (progress == null) return child;
+        return Container(
+          height: height,
+          width: double.infinity,
+          color: const Color(0xFFEDEDED),
+          alignment: Alignment.center,
+          child: const SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2, color: topColor),
+          ),
+        );
+      },
+      errorBuilder: (context, error, stack) => Container(
+        height: height,
+        width: double.infinity,
+        color: const Color(0xFFEDEDED),
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.image_not_supported_outlined,
+          color: Colors.grey.shade400,
+          size: 32,
+        ),
+      ),
+    );
+  }
+
+  Widget _emptyState(String message) {
+    return Container(
+      height: 160,
+      alignment: Alignment.center,
+      child: Text(
+        message,
+        style: GoogleFonts.poppins(color: Colors.grey.shade600, fontSize: 14),
+      ),
+    );
   }
 }
 
 class HeadPicture extends StatelessWidget {
-  const HeadPicture({
-    Key? key,
-  }) : super(key: key);
+  const HeadPicture({Key? key, this.image}) : super(key: key);
+
+  /// The stored `user_img` value (filename). `null`, empty, `"1"` or `"null"`
+  /// all mean "no photo uploaded".
+  final String? image;
+
+  bool get _hasImage {
+    final img = image;
+    return img != null && img.isNotEmpty && img != "1" && img != "null";
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => UserProfilePage()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserProfilePage()),
+        );
       },
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Stack(
-          children: const [
-            CircleAvatar(
-              maxRadius: 24,
-              minRadius: 24,
-              backgroundColor: bottomColor,
-              backgroundImage: AssetImage("assets/images/student_profile.jpeg"),
+      child: Stack(
+        children: [
+          CircleAvatar(
+            maxRadius: 24,
+            minRadius: 24,
+            backgroundColor: bottomColor,
+            // Static asset stays as the fallback layer; the network photo is
+            // drawn on top and, if it fails to load, the asset shows through.
+            backgroundImage:
+                const AssetImage("assets/images/student_profile.jpeg"),
+            foregroundImage: _hasImage
+                ? NetworkImage("$user_img_uri$image")
+                : null,
+            onForegroundImageError: _hasImage ? (_, __) {} : null,
+          ),
+          const Positioned(
+            right: 0,
+            top: 0,
+            child: CircleAvatar(
+              minRadius: 7,
+              maxRadius: 7,
+              backgroundColor: Color(0xFFFF3B30),
             ),
-            Positioned(
-              right: 0,
-              top: 0,
-              child: CircleAvatar(
-                minRadius: 7,
-                maxRadius: 7,
-                backgroundColor: Colors.red,
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

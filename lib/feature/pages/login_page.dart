@@ -14,6 +14,8 @@ import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 // import 'package:onesignal_flutter/onesignal_flutter.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
 // 052141350070  SHANI IDDI
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -245,365 +247,385 @@ class _LoginPageState extends State<LoginPage> {
             resizeToAvoidBottomInset: false,
             body: Semantics(
               label: "Login Page",
-              child: SafeArea(
-                child: Center(
-                    child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: Container(
-                            height:double.infinity,
-                            child: Stack(children: [
-                              Row(children: [
-                                Container(
-                                  color: bottomColor,
-                                  width: MediaQuery.of(context).size.width / 2,
-                                ),
-                                Container(
-                                  color: topColor,
-                                  width: MediaQuery.of(context).size.width / 2,
-                                ),
-                              ]),
-                              Consumer<ConnectivityProvider>(
-                                  builder: (context, provider, _) {
-                                if (provider.status ==
-                                    ConnectivityStatus.Offline) {
-                                  SnackBar(
-                                      content: Text("No internet connection"),
-                                      backgroundColor: topColor,
-                                      behavior: SnackBarBehavior.floating,
-                                      action: SnackBarAction(
-                                        label: 'Dismiss',
-                                        disabledTextColor: Colors.white,
-                                        textColor: Colors.yellow,
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .hideCurrentSnackBar();
-                                        },
-                                      ));
-                                  return Column(
-                                    children: [
-                                      Expanded(
-                                          flex: 4,
-                                          child: Container(
-                                            width:
-                                                MediaQuery.of(context).size.width,
-                                            decoration: const BoxDecoration(
-                                                color: topColor,
-                                                borderRadius: BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(30))),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 200,
-                                                  child: Image.asset(
-                                                    "assets/images/f.png",
-                                                    fit: BoxFit.cover,
+              child: Center(
+                  child: Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Container(
+                          height: double.infinity,
+                          child: Stack(children: [
+                            Row(children: [
+                              Container(
+                                color: bottomColor,
+                                width: MediaQuery.of(context).size.width / 2,
+                              ),
+                              Container(
+                                color: topColor,
+                                width: MediaQuery.of(context).size.width / 2,
+                              ),
+                            ]),
+                            Consumer<ConnectivityProvider>(
+                                builder: (context, provider, _) {
+                              if (provider.status ==
+                                  ConnectivityStatus.Offline) {
+                                SnackBar(
+                                    content: Text("No internet connection"),
+                                    backgroundColor: topColor,
+                                    behavior: SnackBarBehavior.floating,
+                                    action: SnackBarAction(
+                                      label: 'Dismiss',
+                                      disabledTextColor: Colors.white,
+                                      textColor: Colors.yellow,
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                      },
+                                    ));
+                                return Column(
+                                  children: [
+                                    Expanded(
+                                        flex: 4,
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
+                                          decoration: const BoxDecoration(
+                                              color: topColor,
+                                              borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(30))),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 200,
+                                                child: Image.asset(
+                                                  "assets/images/f.png",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 25,
+                                              ),
+                                               Text(
+                                                "No internet connection",
+                                                style: GoogleFonts.poppins(
+                                                    color: bottomColor,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    fontSize: 30),
+                                              )
+                                            ],
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: 4,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                              color: bottomColor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(30))),
+                                          child: Column(children: [
+                                            Spacer(),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 18.0),
+                                              child: Container(
+                                                width: double.infinity,
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                    color: topColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Center(
+                                                  child: Text(
+                                                    "No internet connection",
+                                                    style: GoogleFonts.poppins(
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                  height: 25,
-                                                ),
-                                                const Text(
-                                                  "No internet connection",
-                                                  style: TextStyle(
-                                                      color: bottomColor,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 30),
-                                                )
-                                              ],
+                                              ),
                                             ),
-                                          )),
-                                      Expanded(
-                                          flex: 4,
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                                color: bottomColor,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(30))),
+                                            Spacer(),
+                                          ]),
+                                        ))
+                                  ],
+                                );
+                              } else {
+                                return Column(
+                                  children: [
+                                    Expanded(
+                                        flex: 4,
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
+                                          decoration: const BoxDecoration(
+                                              color: topColor,
+                                              borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(30))),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 150,
+                                                child: Image.asset(
+                                                  "assets/images/f.png",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 24,
+                                              ),
+                                               Text(
+                                                "SIGN IN",
+                                                style: GoogleFonts.poppins(
+                                                    color: bottomColor,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    fontSize: 30),
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: reduceConatiner,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                              color: bottomColor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(30))),
+                                          child: Form(
+                                            key: formkey,
                                             child: Column(children: [
-                                              Spacer(),
+                                              SizedBox(
+                                                height: isOnTap,
+                                              ),
                                               Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 18.0),
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  height: 50,
-                                                  decoration: BoxDecoration(
-                                                      color: topColor,
+                                                padding: const EdgeInsets
+                                                    .symmetric(
+                                                    horizontal: 18.0,
+                                                    vertical: 10),
+                                                child: TextFormField(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      isOnTap = 20;
+                                                      reduceConatiner = 6;
+                                                    });
+                                                  },
+                                                  validator: ((value) {
+                                                    if (value!.isEmpty) {
+                                                      return "Index Number or Email field is required";
+                                                    }
+                                                    return null;
+                                                  }),
+                                                  keyboardType: TextInputType
+                                                      .emailAddress,
+                                                  controller: emailController,
+                                                  decoration: InputDecoration(
+                                                    contentPadding:
+                                                        EdgeInsets.all(10),
+                                                    label: Text("Index Number or Email"),
+                                                    hintText: '',
+                                                    prefixIcon:
+                                                        Icon(Icons.email),
+                                                    border:
+                                                        OutlineInputBorder(
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "No internet connection",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                          BorderRadius
+                                                              .circular(10.0),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              Spacer(),
-                                            ]),
-                                          ))
-                                    ],
-                                  );
-                                } else {
-                                  return Column(
-                                    children: [
-                                      Expanded(
-                                          flex: 4,
-                                          child: Container(
-                                            width:
-                                                MediaQuery.of(context).size.width,
-                                            decoration: const BoxDecoration(
-                                                color: topColor,
-                                                borderRadius: BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(30))),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 150,
-                                                  child: Image.asset(
-                                                    "assets/images/f.png",
-                                                    fit: BoxFit.cover,
+                                              Padding(
+                                                padding: const EdgeInsets
+                                                    .symmetric(
+                                                    horizontal: 18.0,
+                                                    vertical: 10),
+                                                child: TextFormField(
+                                                  onTap: () {
+                                                    isOnTap = 20;
+                                                    reduceConatiner = 6;
+                                                  },
+                                                  validator: ((value) {
+                                                    if (value!.isEmpty) {
+                                                      return "Password field is required";
+                                                    }
+                                                    return null;
+                                                  }),
+                                                  keyboardType: TextInputType
+                                                      .visiblePassword,
+                                                  controller:
+                                                      passwordController,
+                                                  obscureText: ispassword,
+                                                  decoration: InputDecoration(
+                                                    contentPadding:
+                                                        EdgeInsets.all(10),
+                                                    label: Text("Password"),
+                                                    hintText: '',
+                                                    prefixIcon:
+                                                        Icon(Icons.lock),
+                                                    suffixIcon: IconButton(
+                                                      icon: Icon(ispassword
+                                                          ? Icons
+                                                              .visibility_off
+                                                          : Icons.visibility),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          ispassword =
+                                                              !ispassword;
+                                                        });
+                                                      },
+                                                    ),
+                                                    border:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius
+                                                              .circular(10.0),
+                                                    ),
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                  height: 24,
-                                                ),
-                                                const Text(
-                                                  "SIGN IN",
-                                                  style: TextStyle(
-                                                      color: bottomColor,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 30),
-                                                ),
-                                              ],
-                                            ),
-                                          )),
-                                      Expanded(
-                                          flex: reduceConatiner,
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                                color: bottomColor,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(30))),
-                                            child: Form(
-                                              key: formkey,
-                                              child: Column(children: [
-                                                SizedBox(
-                                                  height: isOnTap,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 18.0,
-                                                          vertical: 10),
-                                                  child: TextFormField(
-                                                    onTap: () {
+                                              ),
+                                              const SizedBox(
+                                                height: 15,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets
+                                                    .symmetric(
+                                                    horizontal: 18.0),
+                                                child: GestureDetector(
+                                                  onTap: () async {
+                                                    _dialog.show(
+                                                        message: 'Waiting...',
+                                                        type:
+                                                            SimpleFontelicoProgressDialogType
+                                                                .hurricane);
+                                                    await Future.delayed(
+                                                        Duration(seconds: 1));
+                                                    _dialog.hide();
+                                                    if (formkey.currentState!
+                                                        .validate()) {
                                                       setState(() {
-                                                        isOnTap = 20;
-                                                        reduceConatiner = 6;
+                                                        loading = true;
+                                                        _loginUser();
                                                       });
-                                                    },
-                                                    validator: ((value) {
-                                                      if (value!.isEmpty) {
-                                                        return "Email field is required";
-                                                      }
-                                                      return null;
-                                                    }),
-                                                    keyboardType: TextInputType
-                                                        .emailAddress,
-                                                    controller: emailController,
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                          EdgeInsets.all(10),
-                                                      label: Text("Email"),
-                                                      hintText: '',
-                                                      prefixIcon:
-                                                          Icon(Icons.email),
-                                                      border: OutlineInputBorder(
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                        color: topColor,
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                10.0),
-                                                      ),
+                                                            BorderRadius
+                                                                .circular(
+                                                                    10)),
+                                                    child: Center(
+                                                      child: loading
+                                                          ? SpinKitFadingCircle(
+                                                              itemBuilder:
+                                                                  (BuildContext
+                                                                          context,
+                                                                      int index) {
+                                                                return DecoratedBox(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: index
+                                                                            .isEven
+                                                                        ? bottomColor
+                                                                        : bottomColor,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20),
+                                                                  ),
+                                                                );
+                                                              },
+                                                              size: 40,
+                                                            )
+                                                          : Text(
+                                                              "SIGN IN",
+                                                              style: GoogleFonts.poppins(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize:
+                                                                      20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
                                                     ),
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 18.0,
-                                                          vertical: 10),
-                                                  child: TextFormField(
-                                                    onTap: () {
-                                                      isOnTap = 20;
-                                                      reduceConatiner = 6;
-                                                    },
-                                                    validator: ((value) {
-                                                      if (value!.isEmpty) {
-                                                        return "Password field is required";
-                                                      }
-                                                      return null;
-                                                    }),
-                                                    keyboardType: TextInputType
-                                                        .visiblePassword,
-                                                    controller:
-                                                        passwordController,
-                                                    obscureText: ispassword,
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                          EdgeInsets.all(10),
-                                                      label: Text("Password"),
-                                                      hintText: '',
-                                                      prefixIcon:
-                                                          Icon(Icons.lock),
-                                                      suffixIcon: IconButton(
-                                                        icon: Icon(ispassword
-                                                            ? Icons.visibility_off
-                                                            : Icons.visibility),
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            ispassword =
-                                                                !ispassword;
-                                                          });
-                                                        },
-                                                      ),
-                                                      border: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                10.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 15,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 18.0),
-                                                  child: GestureDetector(
-                                                    onTap: () async {
-                                                      _dialog.show(
-                                                          message: 'Waiting...',
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Center(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .end, // Align widgets to the right
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        // Show loading dialog
+                                                        _dialog.show(
+                                                          message:
+                                                              'Waiting...',
                                                           type:
                                                               SimpleFontelicoProgressDialogType
-                                                                  .hurricane);
-                                                      await Future.delayed(
-                                                          Duration(seconds: 1));
-                                                      _dialog.hide();
-                                                      if (formkey.currentState!
-                                                          .validate()) {
-                                                        setState(() {
-                                                          loading = true;
-                                                          _loginUser();
-                                                        });
-                                                      }
-                                                    },
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      height: 50,
-                                                      decoration: BoxDecoration(
+                                                                  .hurricane,
+                                                        );
+                                                        await Future.delayed(
+                                                            Duration(
+                                                                seconds: 1));
+                                                        _dialog.hide();
+              
+                                                        // Navigate to ForgotPasswordPage and remove all previous routes
+                                                        Navigator.of(context).push(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ForgotPasswordPage()));
+                                                      },
+                                                      child: Text(
+                                                        'Forgot Password?',
+                                                        style: GoogleFonts.poppins(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           color: topColor,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10)),
-                                                      child: Center(
-                                                        child: loading
-                                                            ? SpinKitFadingCircle(
-                                                                itemBuilder:
-                                                                    (BuildContext
-                                                                            context,
-                                                                        int index) {
-                                                                  return DecoratedBox(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: index
-                                                                              .isEven
-                                                                          ? bottomColor
-                                                                          : bottomColor,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              20),
-                                                                    ),
-                                                                  );
-                                                                },
-                                                                size: 40,
-                                                              )
-                                                            : Text(
-                                                                "SIGN IN",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize: 20,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
+                                                    SizedBox(
+                                                        width:
+                                                            16), // Optional spacing between elements
+                                                  ],
                                                 ),
-                                                SizedBox(height: 5,),
-                                                Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end, // Align widgets to the right
-                        children: [
-              GestureDetector(
-                onTap: () async {
-                  // Show loading dialog
-                  _dialog.show(
-                    message: 'Waiting...',
-                    type: SimpleFontelicoProgressDialogType.hurricane,
-                  );
-                  await Future.delayed(Duration(seconds: 1));
-                  _dialog.hide();
-              
-                  // Navigate to ForgotPasswordPage and remove all previous routes
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                    (route) => false,
-                  );
-                },
-                child: Text(
-                  'Forgot Password?',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: topColor,
-                  ),
-                ),
-              ),
-              SizedBox(width: 16), // Optional spacing between elements
-                        ],
-                      ),
-                    ),
-                                              ]),
-                                            ),
-                                          ))
-                                    ],
-                                  );
-                                }
-                              })
-                            ])))),
-              ),
+                                              ),
+                                            ]),
+                                          ),
+                                        ))
+                                  ],
+                                );
+                              }
+                            })
+                          ])))),
             )),
       ),
     );

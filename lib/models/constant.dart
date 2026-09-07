@@ -7,8 +7,8 @@
 // const buildUrl = 'http://10.0.2.2:8000/api/v1';
 // const asset_base_url = 'http://10.0.2.2:8000';
 
-const buildUrl = 'https://app.kstu-src.com/api/v1';
-const asset_base_url = 'https://app.kstu-src.com';
+const buildUrl = 'https://app.src-kstu.com/api/v1';
+const asset_base_url = 'https://app.src-kstu.com';
 
 
 const loginUrl = buildUrl + '/login';

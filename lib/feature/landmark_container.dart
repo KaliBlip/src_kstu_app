@@ -2,7 +2,6 @@ import 'package:src_kstu_app/services/landmark_places.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:src_kstu_app/feature/pages/error_pages/no_internet.dart';
 
 class LandmarkContainer extends StatefulWidget {
   final int title;

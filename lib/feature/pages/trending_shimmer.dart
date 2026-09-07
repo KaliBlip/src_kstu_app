@@ -10,66 +10,59 @@ class TrendingShimmer extends StatelessWidget {
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.white,
       period: Duration(seconds: 3),
-      child: Container(
-        width: double.infinity,
+      child: SizedBox(
         height: 320,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: ListView.builder(
-            itemCount: 6,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 2, // Reduced count to fit in fixed height
             itemBuilder: (context, index) {
               return Column(
                 children: [
                   Container(
                     width: double.infinity,
-                    height: 200,
+                    height: 120,
                     decoration: BoxDecoration(
-                        color: Colors.grey.shade400,
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                            image: NetworkImage(''), fit: BoxFit.cover)),
+                      color: Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   Container(
                     width: double.infinity,
-                    height: 20,
+                    height: 15,
                     color: Colors.grey.shade400,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Container(
-                        width: 100,
-                        height: 20,
+                        width: 80,
+                        height: 15,
                         color: Colors.grey.shade400,
                       ),
                       Spacer(),
                       Container(
-                        width: 100,
-                        height: 20,
+                        width: 60,
+                        height: 15,
                         color: Colors.grey.shade400,
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       Container(
-                        width: 100,
-                        height: 20,
+                        width: 60,
+                        height: 15,
                         color: Colors.grey.shade400,
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Divider(
-                    thickness: 1,
-                    color: Colors.grey,
-                  )
+                  const SizedBox(height: 15),
+                  if (index < 1) // Only show divider between items
+                    Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
                 ],
               );
             },

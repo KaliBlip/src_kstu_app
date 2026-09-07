@@ -11,6 +11,7 @@ class CampusMapProvider extends ChangeNotifier {
   List<CampusMapModel> get map => _map;
 
   Future<List<CampusMapModel>> fetchNotice(String url) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = await getToken();
     final response = await http.get(Uri.parse(url), headers: {
 
@@ -18,11 +19,25 @@ class CampusMapProvider extends ChangeNotifier {
       'Authorization': 'Bearer $token'
     });
 
+    final cachedMaps =
+        prefs.getString('cached_map_page');
+
+            if (cachedMaps != null) {
+      final List<dynamic> cachedData = json.decode(cachedMaps);
+      _map = cachedData.map((e) => CampusMapModel.fromJson(e)).toList();
+      notifyListeners();
+      return _map;
+    }
+
+
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonData =
           json.decode(response.body)['campus_landmarks'];
       final List<dynamic> data = jsonData['data'];
       _map = data.map((e) => CampusMapModel.fromJson(e)).toList();
+
+      await prefs.setString(
+          'cached_map_page', json.encode(data));
       notifyListeners();
       return _map;
     } else if (response.statusCode == 401) {

@@ -1,31 +1,57 @@
 import 'dart:convert';
 import 'package:src_kstu_app/components/colors.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
+import 'package:src_kstu_app/feature/pages/error_pages/no_internet.dart';
 import 'package:src_kstu_app/feature/pages/key_moments_container.dart';
 import 'package:src_kstu_app/feature/pages/trending_shimmer.dart';
 import 'package:src_kstu_app/models/announcement.dart';
 import 'package:src_kstu_app/models/constant.dart';
-import 'package:src_kstu_app/services/connectivity_provider.dart';
-import 'package:src_kstu_app/services/trending_news.dart';
+import 'package:src_kstu_app/providers/connectivity_provider.dart';
+import 'package:src_kstu_app/providers/trending_news_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
-class DetailNews extends StatefulWidget {
+class DetailNews extends ConsumerStatefulWidget {
   const DetailNews({super.key, required this.title});
   final int title;
 
   @override
-  State<DetailNews> createState() => _DetailNewsState();
+  ConsumerState<DetailNews> createState() => _DetailNewsState();
 }
 
-class _DetailNewsState extends State<DetailNews> {
-  double marignTop = 180;
+class _DetailNewsState extends ConsumerState<DetailNews> {
+  double marignTop = 260;
   ScrollController _scrollController = ScrollController();
   bool isLoading = false;
+
+  Future<void> saveImageToGallery(
+    String imageUrl,
+    BuildContext context,
+  ) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final filePath =
+          '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      await Dio().download(imageUrl, filePath);
+      await Share.shareXFiles(
+        [XFile(filePath)],
+        text: 'Save image',
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save image: $e')),
+      );
+    }
+  }
 
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -102,10 +128,7 @@ class _DetailNewsState extends State<DetailNews> {
 
   @override
   Widget build(BuildContext context) {
-    final trending = Provider.of<TrendingNewsProvider>(context, listen: false);
-    // ignore: deprecated_member_use
     return WillPopScope(
-      // this will aid users in going backto dashboardpage after coming here by clicking on a notification
       onWillPop: () async {
         Navigator.pushAndRemoveUntil(
           context,
@@ -116,24 +139,12 @@ class _DetailNewsState extends State<DetailNews> {
       },
       child: Scaffold(
           backgroundColor: topColor,
-          body: Semantics(
-            label: "News Detail Page",
-            child: SafeArea(
-              child:
-                  Consumer<ConnectivityProvider>(builder: (context, provider, _) {
-                if (provider.status == ConnectivityStatus.Offline) {
-                  SnackBar(
-                      content: Text("No internet connection"),
-                      backgroundColor: topColor,
-                      behavior: SnackBarBehavior.floating,
-                      action: SnackBarAction(
-                        label: 'Dismiss',
-                        disabledTextColor: Colors.white,
-                        textColor: Colors.yellow,
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        },
-                      ));
+          body: Consumer(builder: (context, ref, _) {
+            final connectivityStatus = ref.watch(connectivityStreamProvider);
+            
+            return connectivityStatus.when(
+              data: (status) {
+                if (status == ConnectivityStatus.offline) {
                   return Container(
                       height: MediaQuery.of(context).size.height,
                       width: double.infinity,
@@ -144,89 +155,142 @@ class _DetailNewsState extends State<DetailNews> {
                       child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10.0, vertical: 18.0),
-                          child: TrendingShimmer()));
+                          child: noInternet()));
                 } else {
                   return FutureBuilder<Announcement>(
-                      future: trending.fetchTrendDetails(widget.title),
+                      future: ref.read(trendingNewsDetailsProvider(widget.title).future),
                       builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final trend = snapshot.data!;
-                          return Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: Stack(children: [
-                              Container(
-                                height: 250,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            "${announcement_imgUri}${trend.featuredImage}"),
-                                        fit: BoxFit.cover)),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                        top: 10,
-                                        left: 10,
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Icon(
-                                              Icons.arrow_back_ios,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ))),
-                                    // Positioned(
-                                    //     top: 10,
-                                    //     right: 10,
-                                    //     child: GestureDetector(
-                                    //         onTap: () {},
-                                    //         child: Icon(
-                                    //           CupertinoIcons.bookmark,
-                                    //           color: Colors.white,
-                                    //           size: 30,
-                                    //         ))),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                  // bottom: 20,
-                                  child: Container(
-                                margin: EdgeInsets.only(top: marignTop),
-                                height: MediaQuery.of(context).size.height,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: bottomColor,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(25),
-                                        topLeft: Radius.circular(25))),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 18, vertical: 20),
-                                  child: NestedScrollView(
-                                    scrollDirection: Axis.vertical,
-                                    controller: _scrollController,
-                                    headerSliverBuilder:
-                                        (context, innerBoxIsScrolled) {
-                                      return [];
+                    if (snapshot.hasData) {
+                      final trend = snapshot.data!;
+                      return Container(
+                        height: MediaQuery.of(context).size.height,
+                        child: Stack(children: [
+                          Container(
+                            height: 320,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        "${announcement_imgUri}${trend.featuredImage}"),
+                                    onError: (_, __) {},
+                                    fit: BoxFit.cover)),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: 50,
+                                  left: 20,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
                                     },
-                                    body: ListView(
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                255, 184, 184, 184),
+                                            blurRadius: 20,
+                                            offset: Offset(2, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        // Ensures the icon is both vertically and horizontally centered
+                                        child: Icon(
+                                          Icons
+                                              .arrow_back_ios_new, // Slightly more centered version of the back arrow
+                                          color: Colors.black,
+                                          size:
+                                              25, // Fits better in small circular buttons
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 50,
+                                  right: 10,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      saveImageToGallery(
+                                          "${announcement_imgUri}${trend.featuredImage}",
+                                          context);
+                                    },
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                255, 184, 184, 184),
+                                            blurRadius: 20,
+                                            offset: Offset(2, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.save,
+                                          color: Colors.black,
+                                          size: 25,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                              // bottom: 20,
+                              child: Padding(
+                            padding: EdgeInsets.only(top: marignTop),
+                            child: Container(
+                              margin: EdgeInsets.only(top: 20),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  color: bottomColor,
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(25),
+                                      topLeft: Radius.circular(25))),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 18, vertical: 20),
+                                child: NestedScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  controller: _scrollController,
+                                  headerSliverBuilder:
+                                      (context, innerBoxIsScrolled) {
+                                    return [];
+                                  },
+                                  body: SingleChildScrollView(
+                                    child: Column(
                                       // controller: _scrollController,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Text(
                                           trend.title,
-                                          style: TextStyle(
-                                            
+                                          style: GoogleFonts.poppins(
                                               color: Colors.black,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                             ),
+                                             textAlign: TextAlign.start,
                                         ),
                                         SizedBox(
                                           height: 20,
                                         ),
                                         Divider(
                                           color:
-                                              Color.fromARGB(255, 91, 89, 89),
+                                              Color.fromARGB(255, 223, 222, 222),
                                         ),
                                         SizedBox(height: 10),
                                         Row(
@@ -245,7 +309,7 @@ class _DetailNewsState extends State<DetailNews> {
                                                   width: 5,
                                                 ),
                                                 Container(
-                                                  width: 200,
+                                                  width: 210,
                                                   child: Text(
                                                     '${trend.createdAtFormatted.split(', ')[1]}',
                                                     maxLines: 2,
@@ -316,40 +380,70 @@ class _DetailNewsState extends State<DetailNews> {
                                         SizedBox(height: 10),
                                         Divider(
                                           color:
-                                              Color.fromARGB(255, 91, 89, 89),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
+                                              Color.fromARGB(255, 223, 222, 222),
                                         ),
                                         KeyMomentContainer(title: widget.title)
                                       ],
                                     ),
                                   ),
                                 ),
-                              ))
-                            ]),
-                          );
-                        } else if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container(
-                              height: MediaQuery.of(context).size.height,
-                              width: double.infinity,
-                              decoration: const BoxDecoration(
-                                  color: bottomColor,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(30))),
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 18.0),
-                                  child: TrendingShimmer()));
-                        } else {
-                          return Center();
-                        }
-                      });
+                              ),
+                            ),
+                          ))
+                        ]),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                              color: bottomColor,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(30))),
+                          child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 18.0),
+                              child: TrendingShimmer()));
+                    } else {
+                      return Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: double.infinity,
+                          color: Colors.white,
+                          child: Center(
+                            child: noInternet(),
+                          ));
+                    }
+                  });
                 }
-              }),
-            ),
-          )),
+              },
+              loading: () => Container(
+                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: bottomColor,
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(30)),
+                ),
+                child: Center(
+                  child: CircularProgressIndicator(color: topColor),
+                ),
+              ),
+              error: (error, stack) => Container(
+                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: bottomColor,
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(30)),
+                ),
+                child: Center(
+                  child: Text(
+                    'Error loading content',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
+            );
+          })),
     );
   }
 }

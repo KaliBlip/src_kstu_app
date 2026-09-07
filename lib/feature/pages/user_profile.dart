@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -73,181 +74,180 @@ class _UserProfilePageState extends State<UserProfilePage> {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => UpdateProfilePage()));
           },
-          label: Text('Edit Profile', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
-      body: SafeArea(
-          child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(0.0),
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            child: Stack(
+          label: Text('Edit Profile', style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold),)),
+      body: Center(
+              child: Padding(
+      padding: const EdgeInsets.only(top: 40),
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          children: [
+            Row(children: [
+              Container(
+                color: bottomColor,
+                width: MediaQuery.of(context).size.width / 2,
+              ),
+              Container(
+                color: topColor,
+                width: MediaQuery.of(context).size.width / 2,
+              ),
+            ]),
+            Column(
               children: [
-                Row(children: [
-                  Container(
-                    color: bottomColor,
-                    width: MediaQuery.of(context).size.width / 2,
-                  ),
-                  Container(
-                    color: topColor,
-                    width: MediaQuery.of(context).size.width / 2,
-                  ),
-                ]),
-                Column(
-                  children: [
-                    Expanded(
-                        flex: 4,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height / 2,
-                          decoration: const BoxDecoration(
-                              color: topColor,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(30))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 15),
-                            child: Column(
+                Expanded(
+                    flex: 4,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      decoration: const BoxDecoration(
+                          color: topColor,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 15),
+                        child: Column(
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Dashboard()),
-                                                (route) => false);
-                                      },
-                                      icon: const Icon(
-                                        Icons.arrow_back_ios,
-                                        color: bottomColor,
-                                        size: 25,
-                                      ),
-                                    ),
-                                    const Text(
-                                      "Profile",
-                                      style: TextStyle(
-                                          color: bottomColor,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushAndRemoveUntil(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Dashboard()),
+                                            (route) => false);
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_back_ios,
+                                    color: bottomColor,
+                                    size: 25,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Column(
-                                  children: [
-                                    CircleAvatar(
-                                      maxRadius: 60,
-                                      minRadius: 60,
-                                      backgroundColor: bottomColor,
-                                      backgroundImage: image != "1"
-                                          ? NetworkImage(
-                                              "${user_img_uri}${image}")
-                                          : NetworkImage(
-                                              "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      "${name}",
-                                      style: TextStyle(
-                                          color: bottomColor,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      "${yearOfAdmission} - ${yearOfCompletion}",
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 15),
-                                    ),
-                                  ],
+                                const Text(
+                                  "Profile",
+                                  style: TextStyle(
+                                      color: bottomColor,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
                                 )
                               ],
                             ),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 5,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height / 2,
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                              color: bottomColor,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(30))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18.0, vertical: 10),
-                            child: ListView(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Column(
                               children: [
-                                ProfileDetails(
-                                  subtitle: "${name}",
-                                  title: "Full Name",
+                                CircleAvatar(
+                                  maxRadius: 60,
+                                  minRadius: 60,
+                                  backgroundColor: bottomColor,
+                                  backgroundImage: image != "1"
+                                      ? NetworkImage(
+                                          "${user_img_uri}${image}")
+                                      : NetworkImage(
+                                          "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                                 ),
-                                ProfileDetails(
-                                  subtitle: "${index}",
-                                  title: "Student Number",
+                                SizedBox(
+                                  height: 8,
                                 ),
-                                ProfileDetails(
-                                  subtitle: "${phone}",
-                                  title: "Phone Number",
+                                Text(
+                                  "${name}",
+                                  style: GoogleFonts.poppins(
+                                      color: bottomColor,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                ProfileDetails(
-                                  subtitle: "${gender}",
-                                  title: "Gender",
+                                SizedBox(
+                                  height: 8,
                                 ),
-                                ProfileDetails(
-                                  subtitle: "${email}",
-                                  title: "Student Email",
-                                ),
-                                ProfileDetails(
-                                  subtitle: "${department}",
-                                  title: "Department",
-                                ),
-                                ProfileDetails(
-                                  subtitle: "${program}",
-                                  title: "Program",
-                                ),
-                                ProfileDetails(
-                                  subtitle: "${faculty}",
-                                  title: "Faculty",
-                                ),
-                                ProfileDetails(
-                                  subtitle: "${level}",
-                                  title: "Level",
-                                ),
-                                ProfileDetails(
-                                  subtitle: '${semester}',
-                                  title: "Semester",
-                                ),
-                                ProfileDetails(
-                                  subtitle: '${yearOfAdmission}',
-                                  title: "Year Of Admission",
-                                ),
-                                ProfileDetails(
-                                  subtitle: '${yearOfCompletion}',
-                                  title: "Year Of Completion",
-                                  isLast: true,
+                                Text(
+                                  "${yearOfAdmission} - ${yearOfCompletion}",
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.grey, fontSize: 15),
                                 ),
                               ],
+                            )
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 5,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                          color: bottomColor,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(30))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18.0, vertical: 10),
+                        child: ListView(
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          children: [
+                            ProfileDetails(
+                              subtitle: "${name}",
+                              title: "Full Name",
                             ),
-                          ),
-                        ))
-                  ],
-                )
+                            ProfileDetails(
+                              subtitle: "${index}",
+                              title: "Student Number",
+                            ),
+                            ProfileDetails(
+                              subtitle: "${phone}",
+                              title: "Phone Number",
+                            ),
+                            ProfileDetails(
+                              subtitle: "${gender}",
+                              title: "Gender",
+                            ),
+                            ProfileDetails(
+                              subtitle: "${email}",
+                              title: "Student Email",
+                            ),
+                            ProfileDetails(
+                              subtitle: "${department}",
+                              title: "Department",
+                            ),
+                            ProfileDetails(
+                              subtitle: "${program}",
+                              title: "Program",
+                            ),
+                            ProfileDetails(
+                              subtitle: "${faculty}",
+                              title: "Faculty",
+                            ),
+                            ProfileDetails(
+                              subtitle: "${level}",
+                              title: "Level",
+                            ),
+                            ProfileDetails(
+                              subtitle: '${semester}',
+                              title: "Semester",
+                            ),
+                            ProfileDetails(
+                              subtitle: '${yearOfAdmission}',
+                              title: "Year Of Admission",
+                            ),
+                            ProfileDetails(
+                              subtitle: '${yearOfCompletion}',
+                              title: "Year Of Completion",
+                              isLast: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ))
               ],
-            ),
-          ),
+            )
+          ],
         ),
-      )),
+      ),
+              ),
+            ),
     );
   }
 }

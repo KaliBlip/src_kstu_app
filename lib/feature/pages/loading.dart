@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:src_kstu_app/components/colors.dart';
-import 'package:src_kstu_app/services/connectivity_provider.dart';
+import 'package:src_kstu_app/components/random_qoute_generator.dart';
+import 'package:src_kstu_app/providers/connectivity_provider.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/feature/pages/login_page.dart';
 import 'package:src_kstu_app/feature/pages/on-boarding/onboarding-parent.dart';
@@ -10,21 +11,18 @@ import 'package:src_kstu_app/models/api_response.dart';
 import 'package:src_kstu_app/models/constant.dart';
 import 'package:src_kstu_app/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'news_details.dart';
-import 'package:notification_permissions/notification_permissions.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class LoadingPage extends StatefulWidget {
+class LoadingPage extends ConsumerStatefulWidget {
   const LoadingPage({super.key});
 
   @override
-  State<LoadingPage> createState() => _LoadingPageState();
+  ConsumerState<LoadingPage> createState() => _LoadingPageState();
 }
 
-class _LoadingPageState extends State<LoadingPage> {
+class _LoadingPageState extends ConsumerState<LoadingPage> {
   void _loadUserInfo() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var name = localStorage.getString('name');
@@ -37,8 +35,6 @@ class _LoadingPageState extends State<LoadingPage> {
           MaterialPageRoute(builder: (context) => onBoardingParent()),
           (route) => false);
       // has not opened app b4
-
-
     } else {
       // has opened app b4
 
@@ -52,7 +48,7 @@ class _LoadingPageState extends State<LoadingPage> {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => Dashboard()),
               (route) => false);
-           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Welcome back, ${name}'),
             backgroundColor: topColor,
             behavior: SnackBarBehavior.floating,
@@ -188,7 +184,7 @@ class _LoadingPageState extends State<LoadingPage> {
     super.initState();
 
     // listenForPushNotifications(context);
-    Timer(Duration(seconds: 4), _loadUserInfo);
+    Timer(Duration(seconds: 8), _loadUserInfo);
   }
 
   // void listenForPushNotifications(BuildContext context) {
@@ -221,128 +217,124 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: topColor,
-        body: Semantics(
-          label: "Loading page",
-          child: SafeArea(
-            child:
-                Consumer<ConnectivityProvider>(builder: (context, provider, _) {
-              if (provider.status == ConnectivityStatus.Offline) {
-                SnackBar(
-                    content: Text("No internet connection"),
-                    backgroundColor: Colors.red,
-                    behavior: SnackBarBehavior.floating,
-                    action: SnackBarAction(
-                      label: 'Dismiss',
-                      disabledTextColor: Colors.white,
-                      textColor: Colors.yellow,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      },
-                    ));
-                return Container(
-  height: MediaQuery.of(context).size.height,
-  width: MediaQuery.of(context).size.width,
-  color: topColor,
-  child: Padding(
-    padding: const EdgeInsets.all(18.0),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Spacer(),
-        Container(
-          width: 240,
-          height: 240,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/f.png"),
-              fit: BoxFit.contain,
-            ),
-          ),
+      backgroundColor: topColor,
+      body: Semantics(
+        label: "Loading page",
+        child: SafeArea(
+          child: Consumer(builder: (context, ref, _) {
+            final connectivityStatus = ref.watch(connectivityStreamProvider);
+            
+            return connectivityStatus.when(
+              data: (status) {
+                if (status == ConnectivityStatus.offline) {
+                  return _buildOfflineContent();
+                }
+                return _buildLoadingContent();
+              },
+              loading: () => _buildLoadingContent(),
+              error: (error, stack) => _buildLoadingContent(),
+            );
+          }),
         ),
-        const SizedBox(
-          height: 20,
-        ),
-        const Center(
-          child: Text(
-          textAlign: TextAlign.center,
+      ),
+    );
+  }
 
-            "Students Representative Council KsTU",
-            style: TextStyle(
-              color: bottomColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
+  Widget _buildOfflineContent() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      color: topColor,
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Spacer(),
+            Container(
+              width: 240,
+              height: 240,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/f.png"),
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
-          ),
-        ),
-        Spacer(),
-        const Center(
-          child: Text(
-            "No internet connection",
-            style: TextStyle(
-              color: bottomColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
+            const SizedBox(height: 20),
+            Center(
+              child: Text(
+                textAlign: TextAlign.center,
+                "Students Representative Council KsTU",
+                style: GoogleFonts.poppins(
+                  color: bottomColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
             ),
-          ),
+            Spacer(),
+            Center(
+              child: Text(
+                "No internet connection",
+                style: GoogleFonts.poppins(
+                  color: bottomColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  ),
-);
+      ),
+    );
+  }
 
-              } else {
-                return Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  color: topColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Spacer(),
-                        Container(
-                          width: 240,
-                          height: 240,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage("assets/images/f.png"),
-                                  fit: BoxFit.contain)),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Text(
-                          textAlign: TextAlign.center,
-                          "Students Representative Council KsTU",
-                          style: TextStyle(
-                              color: bottomColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                        Spacer(),
-                        SpinKitFadingCircle(
-                          itemBuilder: (BuildContext context, int index) {
-                            return DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: index.isEven ? bottomColor : bottomColor,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            );
-                          },
-                          size: 60,
-                        ),
-                        SizedBox(
-                          height: 40,
-                        )
-                      ],
-                    ),
+  Widget _buildLoadingContent() {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      color: topColor,
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Spacer(),
+            Container(
+              width: 240,
+              height: 240,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/f.png"),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Spacer(),
+            Column(
+              spacing: 12,
+              children: [
+                CircularProgressIndicator(
+                  color: bottomColor,
+                  strokeWidth: 5,
+                ),
+                RandomQouteGenerator(),
+                Text(
+                  textAlign: TextAlign.center,
+                  "- Students Representative Council -",
+                  style: GoogleFonts.poppins(
+                    color: bottomColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
-                );
-              }
-            }),
-          ),
-        ));
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

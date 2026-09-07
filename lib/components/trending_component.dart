@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:async/async.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum AnnouncementLoadMoreStatus { LOADING, STABLE }
 
@@ -38,16 +39,12 @@ class TrendingComponent extends StatefulWidget {
 
 class _TrendingComponentState extends State<TrendingComponent> {
   final int maxPaginatedAnnouncementsValue = 5;
-  // this value (maxPaginatedAnnouncementsValue) must correspond with the number of
-  // announcements gotten for each request
-  //
   AnnouncementLoadMoreStatus loadMoreStatus = AnnouncementLoadMoreStatus.STABLE;
   final ScrollController scrollController = new ScrollController();
-  // static const String IMAGE_BASE_URL = "http://image.tmdb.org/t/";
   List<Announcement>? announcements = [];
 
   int currentPageNumber = 0;
-  late CancelableOperation announcementOperation;
+  CancelableOperation? announcementOperation;
   bool dataLoading = false;
   // keep track of getting fresh data
 
@@ -56,7 +53,6 @@ class _TrendingComponentState extends State<TrendingComponent> {
     setState(() {
       announcements = widget.gottenData;
       currentPageNumber = widget.page;
-      // print(currentPageNumber.toString()+"currentt");
     });
     super.initState();
   }
@@ -64,8 +60,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
   @override
   void dispose() {
     scrollController.dispose();
-    // ignore: unnecessary_null_comparison
-    if (announcementOperation != null) announcementOperation.cancel();
+    announcementOperation?.cancel();
     super.dispose();
   }
 
@@ -222,10 +217,6 @@ class _TrendingComponentState extends State<TrendingComponent> {
 
   @override
   Widget build(BuildContext context) {
-    // final noticeProvider =
-    //     Provider.of<NoticeBoardProvider>(context, listen: false);
-    // final trendProvider =
-    //     Provider.of<TrendingNewsProvider>(context, listen: false);
     return NotificationListener(
       onNotification: onNotification,
       child: widget.showRefresh
@@ -254,6 +245,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
               : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
                       onTap: () async {
@@ -273,7 +265,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
                         children: [
                           Container(
                             width: double.infinity,
-                            height: 200,
+                            height: 250,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 // ignore: unnecessary_null_comparison
@@ -281,18 +273,19 @@ class _TrendingComponentState extends State<TrendingComponent> {
                                     ? DecorationImage(
                                         image: NetworkImage(
                                             "${announcement_imgUri}${trend[index].featuredImage}"),
-                                        fit: BoxFit.cover)
+                                        onError: (_, __) {},
+                                        fit: BoxFit.fill)
                                     : null),
                           ),
                           // ignore: unnecessary_null_comparison
                           trend[index].featuredImage != null
                               ? Container(
                                   width: double.infinity,
-                                  height: 200,
+                                  height: 250,
                                   decoration: BoxDecoration(
                                       borderRadius:
                                           BorderRadius.circular(10),
-                                      color: Colors.black.withOpacity(0.3)),
+                                      color: Colors.black.withOpacity(0.1)),
                                 )
                               : Center(),
                         ],
@@ -319,17 +312,19 @@ class _TrendingComponentState extends State<TrendingComponent> {
                         trend[index].title.trim(),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.roboto(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
+
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
                       ),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -340,20 +335,21 @@ class _TrendingComponentState extends State<TrendingComponent> {
                               FaIcon(
                                 FontAwesomeIcons.clock,
                                 color: Colors.grey,
+                                size: 20,
                               ),
                               const SizedBox(
                                 width: 5,
                               ),
                               Container(
                                 // ============= Increasing the width of the Container to display the full date length
-                                width: 180,
+                                width: 230,
                                 child: Text(
                                   '${trend[index].createdAtFormatted.split(', ')[1]}',
                                   maxLines: 1,
                                   overflow: TextOverflow.fade,
-                                  style: TextStyle(
+                                  style: GoogleFonts.roboto(
                                       color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.w700),
                                 ),
                               )
                             ],
@@ -394,7 +390,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
                                     // ),
                                     // Text(
                                     //   '${trend[index].likesCountFormatted}',
-                                    //   style: TextStyle(
+                                    //   style: GoogleFonts.roboto(
                                     //       color: Colors.grey),
                                     // )
                                   ],
@@ -408,7 +404,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
                               ),
                               Text(
                                 '${trend[index].viewsCountFormatted}',
-                                style: TextStyle(color: Colors.grey),
+                                style: GoogleFonts.roboto(color: Colors.grey),
                               )
                             ],
                           )
