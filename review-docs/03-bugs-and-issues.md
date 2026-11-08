@@ -242,3 +242,23 @@ Riverpod, `provider` and raw `setState+http` coexist (`main.dart` wraps both `Pr
 4. **Hardening:** B-17 – B-29.
 5. **Refactor:** B-30 – B-34 (single API client, finish Riverpod migration, generated models, tests).
 
+
+
+
+
+
+
+# 1. Clear npm, pnpm, gradle, playwright, and general CLI caches (~8+ GB)
+rm -rf ~/.npm/_cacache ~/.cache/* ~/.gradle/caches \
+       ~/Library/Caches/ms-playwright ~/Library/Caches/pnpm \
+       ~/Library/Caches/typescript ~/Library/Caches/node-gyp
+
+# 2. Clean up unused/unavailable iOS Simulator devices & caches (up to 18 GB)
+xcrun simctl delete unavailable
+xcrun simctl erase all
+
+# 3. Install Flutter (re-uses the already-downloaded 2.3 GB zip)
+<!-- HOMEBREW_NO_AUTO_UPDATE=1 brew install --cask flutter -->
+
+# 4. Delete all Homebrew download caches (frees another 4.1 GB)
+brew cleanup --prune=all -s
