@@ -262,3 +262,46 @@ xcrun simctl erase all
 
 # 4. Delete all Homebrew download caches (frees another 4.1 GB)
 brew cleanup --prune=all -s
+
+
+
+
+
+
+
+# 1. Why Industry Best Practice Usually Warns Against Full Rewrites
+
+In most software projects, a ground-up rewrite is risky because apps accumulate hidden business logic over years. However, this app is an exception in two ways:
+
+Small surface area: The entire app is only ~15 screens and 19 REST endpoints (all of which are now documented with live JSON fixtures in review-docs/).
+High technical debt in the current code: The current Flutter app has three competing state management patterns (Riverpod, legacy Provider, and raw setState), copy-pasted screens, discontinued packages (connectivity), and 34 documented bugs.
+
+Because the app is small and well-documented, either path (refactoring Flutter or rewriting in React Native / Expo) takes roughly the same amount of effort (~1–2 weeks of focused work).
+
+2. When You SHOULD Rewrite in React Native (Expo + TypeScript)
+
+A React Native rewrite is strongly advisable if:
+
+Your primary stack (and future SRC developers' stack) is TypeScript / React / Next.js. Student/campus developer handoffs are much easier when the mobile app shares the same language (TypeScript) as web projects.
+You want Over-The-Air (OTA) JS updates (expo-updates / EAS Update). Right now, fixing a tiny typo or a broken radio button on iOS requires archiving in Xcode, uploading to App Store Connect, and waiting for Apple review. With Expo + EAS Update, you can push JS/UI bug fixes to students' phones in 60 seconds without a new store review.
+You want automatic caching & pagination out of the box. Using TanStack Query (@tanstack/react-query) + Axios + Zod eliminates 80% of the state management, pagination, and offline-caching bugs we found in 03-bugs-and-issues.md.
+3. When You Should STAY on Flutter (Fix & Refactor In-Place)
+
+Staying on Flutter is advisable if:
+
+You or the current team already know Dart/Flutter well and just want the fastest path to a stable app.
+Urgency: You already have the iOS signing, Xcode project, Android Gradle setup, and TestFlight pipeline working right now. Fixing the top 15 critical/high bugs in the existing Flutter repo (03-bugs-and-issues.md) would take 1–2 days, whereas a full React Native rewrite + testing on both platforms + re-configuring OneSignal native extensions will take 1–2 weeks.
+
+4. Recommended Industry-Standard Strategy (The "Two-Step" Approach)
+
+If you want to move to React Native, industry best practice is not to leave production broken while you rewrite:
+
+Step 1 — Hotfix the Live Flutter App First (1 day):
+Fix the 5 critical bugs in Flutter (B-01 to B-05: the broken "No" radio buttons on Scholarship/Claims forms, the Campus Map cache collision, and the Claims form accidental Navigator.pop) and push 1.2.4 to TestFlight/Play Store so students aren't submitting corrupted applications today.
+Step 2 — Build the React Native Rewrite Cleanly in a Separate Repo (1–2 weeks):
+Framework: Expo (SDK 52+) with Expo Router (file-based routing) and TypeScript (strict mode) — this is the current React Native industry standard recommended by Meta.
+Networking & Cache: TanStack Query v5 + @tanstack/query-async-storage-persister (gives you automatic pull-to-refresh, infinite pagination, and offline caching without writing custom cache logic).
+Auth Storage: expo-secure-store (stores the JWT in iOS Keychain / Android Keystore instead of unencrypted SharedPreferences).
+Forms & Validation: react-hook-form + zod (prevents all the stepper validation and controller leak bugs in the Flutter app).
+Push Notifications: react-native-onesignal + onesignal-expo-plugin with the existing OneSignal App ID.
+Store Continuity: Set ios.bundleIdentifier = "com.kingthrive.srcKstuApp" and android.package = "com.kingthrive.src_kstu_app" in app.json so it ships as a seamless update to existing users.
