@@ -1,0 +1,11 @@
+{
+  "endpoint": "GET /api/v1/campus-map/landmark/map/48",
+  "status": 200,
+  "response": {
+    "status": "success",
+    "message": "Landmark Url Response",
+    "data": {
+      "landmark_url": "https://www.google.com/maps/place/6.691185,-1.610891"
+    }
+  }
+}

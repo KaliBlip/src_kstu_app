@@ -1,0 +1,57 @@
+{
+  "endpoint": "GET /api/v1/scholarships/types",
+  "status": 200,
+  "response": {
+    "success": true,
+    "data": {
+      "current_page": 1,
+      "data": [
+        {
+          "id": 2,
+          "name": "SRC Needy Scholarship",
+          "description": "This form should be completed, signed by the HOD and submit.",
+          "pdf_file": "scholarship_pdfs/media_stSddeTYS1ggRTfRVtCo5sW3Qgq1Bg5CQLtqTqUdeqlczvwAJvIwtKHPoJGGT5lP99WhyZyjEsI8SmUIuIXY7DpvrHAyxIRT91FjOSbbwxnueGMY7thaAvRdOyJb7-1765545750.5241_.pdf",
+          "status": 1,
+          "created_at": "2025-07-20T19:32:11.000000Z",
+          "updated_at": "2025-12-12T13:23:49.000000Z",
+          "pdf_file_url": "https://app.src-kstu.com/storage/scholarship_pdfs/media_stSddeTYS1ggRTfRVtCo5sW3Qgq1Bg5CQLtqTqUdeqlczvwAJvIwtKHPoJGGT5lP99WhyZyjEsI8SmUIuIXY7DpvrHAyxIRT91FjOSbbwxnueGMY7thaAvRdOyJb7-1765545750.5241_.pdf",
+          "required_document_types": [
+            "COMPLETED_FORM",
+            "EXAM_RESULTS"
+          ],
+          "optional_document_types": [
+            "STUDENT_ID",
+            "OTHER"
+          ]
+        }
+      ],
+      "first_page_url": "https://app.src-kstu.com/api/v1/scholarships/types?page=1",
+      "from": 1,
+      "last_page": 1,
+      "last_page_url": "https://app.src-kstu.com/api/v1/scholarships/types?page=1",
+      "links": [
+        {
+          "url": null,
+          "label": "&laquo; Previous",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/scholarships/types?page=1",
+          "label": "1",
+          "active": true
+        },
+        {
+          "url": null,
+          "label": "Next &raquo;",
+          "active": false
+        }
+      ],
+      "next_page_url": null,
+      "path": "https://app.src-kstu.com/api/v1/scholarships/types",
+      "per_page": 10,
+      "prev_page_url": null,
+      "to": 1,
+      "total": 1
+    }
+  }
+}

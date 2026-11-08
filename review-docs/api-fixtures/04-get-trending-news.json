@@ -1,0 +1,472 @@
+{
+  "endpoint": "GET /api/v1/announcements/trending-news?page=1",
+  "status": 200,
+  "response": {
+    "success": "Announcements Response",
+    "announcements": {
+      "current_page": 1,
+      "data": [
+        {
+          "id": 1128,
+          "featured_image": "announcement_img_2JJKo-1787951648.6561_.jpg",
+          "featured_image_min": "min_img_2JJKo-1787951648.6561_.jpg",
+          "title": "MAINTENANCE",
+          "status": 1,
+          "views": 19,
+          "admin_id": 5,
+          "category_id": 2,
+          "created_at": "2026-08-28T21:14:08.000000Z",
+          "updated_at": "2026-11-04T03:28:01.000000Z",
+          "likes_count": 0,
+          "likes_count_formatted": "0",
+          "views_count_formatted": "19",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Friday, 28th August 2026",
+          "liked_users": []
+        },
+        {
+          "id": 1127,
+          "featured_image": "announcement_img_QLY6Z-1780395212.3499_.jpg",
+          "featured_image_min": "min_img_QLY6Z-1780395212.3499_.jpg",
+          "title": "\u2728 Ladies, your future is too precious to be wasted!",
+          "status": 1,
+          "views": 12,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-06-02T10:13:32.000000Z",
+          "updated_at": "2026-11-08T01:39:46.000000Z",
+          "likes_count": 2,
+          "likes_count_formatted": "2",
+          "views_count_formatted": "12",
+          "liked_by_auth_user": true,
+          "created_at_formatted": "Tuesday, 2nd June 2026",
+          "liked_users": [
+            {
+              "id": 429,
+              "user_id": 2540,
+              "announcement_id": 1127,
+              "created_at": "2026-08-28T21:34:02.000000Z",
+              "updated_at": "2026-08-28T21:34:02.000000Z",
+              "get_liker_info": {
+                "id": 2540,
+                "name": "Prof. Thomas",
+                "email": "thomas.aworae@kstu.edu.gh",
+                "gender": "male",
+                "user_img": "user_img_lPTLw-1787946842.8034_.jpg",
+                "index_no": 52041360001,
+                "current_level": "300",
+                "current_sem": 1,
+                "faculty_id": 1,
+                "dept_id": 1,
+                "program_id": 1,
+                "status": 1,
+                "yr_of_admission": "2024",
+                "yr_of_completion": "2028",
+                "last_seen": null,
+                "phone": "0540674940",
+                "created_at": "2025-02-07T12:26:57.000000Z",
+                "updated_at": "2026-08-28T19:54:02.000000Z"
+              }
+            },
+            {
+              "id": 431,
+              "user_id": 1657,
+              "announcement_id": 1127,
+              "created_at": "2026-11-08T01:39:53.000000Z",
+              "updated_at": "2026-11-08T01:39:53.000000Z",
+              "get_liker_info": {
+                "id": 1657,
+                "name": "David Otitiaku ",
+                "email": "sd.dotitiaku620003@kstu.edu.gh",
+                "gender": "male",
+                "user_img": "user_img_EspLs-1736779085.2062_.png",
+                "index_no": 52242620003,
+                "current_level": "300",
+                "current_sem": 1,
+                "faculty_id": 1,
+                "dept_id": 1,
+                "program_id": 88,
+                "status": 1,
+                "yr_of_admission": "2023",
+                "yr_of_completion": "2027",
+                "last_seen": null,
+                "phone": "233599987160",
+                "created_at": "2025-01-13T14:32:32.000000Z",
+                "updated_at": "2025-10-16T16:23:42.000000Z"
+              }
+            }
+          ]
+        },
+        {
+          "id": 1122,
+          "featured_image": "announcement_img_2gm0p-1778652004.4641_.jpg",
+          "featured_image_min": "min_img_2gm0p-1778652004.4641_.jpg",
+          "title": "\ud83d\udd14Institutional Report Presentation at the 34th GNUTS 1st Central Committee Meeting\ud83d\udece\ufe0f",
+          "status": 1,
+          "views": 12,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-05-13T06:00:05.000000Z",
+          "updated_at": "2026-11-02T15:16:28.000000Z",
+          "likes_count": 0,
+          "likes_count_formatted": "0",
+          "views_count_formatted": "12",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Wednesday, 13th May 2026",
+          "liked_users": []
+        },
+        {
+          "id": 1121,
+          "featured_image": "announcement_img_fg6v4-1777390119.1849_.jpg",
+          "featured_image_min": "min_img_fg6v4-1777390119.1849_.jpg",
+          "title": "\ud83c\udf8aHAPPY BIRTHDAY  H.E OWUSU-AMOAH DIVINE \ud83c\udf8a",
+          "status": 1,
+          "views": 12,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-04-28T15:28:39.000000Z",
+          "updated_at": "2026-11-07T19:23:21.000000Z",
+          "likes_count": 0,
+          "likes_count_formatted": "0",
+          "views_count_formatted": "12",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Tuesday, 28th April 2026",
+          "liked_users": []
+        },
+        {
+          "id": 1117,
+          "featured_image": "announcement_img_TEaPB-1775904611.3713_.png",
+          "featured_image_min": "min_img_TEaPB-1775904611.3713_.png",
+          "title": "\ud83d\udcddALL THE BEST IN YOUR END OF SEMESTER EXAMINATION \ud83d\udcdd",
+          "status": 1,
+          "views": 9,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-04-11T10:50:12.000000Z",
+          "updated_at": "2026-11-08T01:40:45.000000Z",
+          "likes_count": 0,
+          "likes_count_formatted": "0",
+          "views_count_formatted": "9",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Saturday, 11th April 2026",
+          "liked_users": []
+        },
+        {
+          "id": 1115,
+          "featured_image": "announcement_img_8ixTf-1773985331.8641_.jpg",
+          "featured_image_min": "min_img_8ixTf-1773985331.8641_.jpg",
+          "title": "\ud83c\udf8aEID MUBARAK\ud83d\udd4c",
+          "status": 1,
+          "views": 10,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-03-20T05:42:12.000000Z",
+          "updated_at": "2026-05-08T06:48:17.000000Z",
+          "likes_count": 0,
+          "likes_count_formatted": "0",
+          "views_count_formatted": "10",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Friday, 20th March 2026",
+          "liked_users": []
+        },
+        {
+          "id": 1113,
+          "featured_image": "announcement_img_1UYY9-1772977100.6912_.jpg",
+          "featured_image_min": "min_img_1UYY9-1772977100.6912_.jpg",
+          "title": "\u23f9\ufe0fTHE OFFICE OF SRC WOMEN\u2019S COMMISSIONER-KsTU",
+          "status": 1,
+          "views": 5,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-03-08T13:38:20.000000Z",
+          "updated_at": "2026-11-08T01:41:14.000000Z",
+          "likes_count": 0,
+          "likes_count_formatted": "0",
+          "views_count_formatted": "5",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Sunday, 8th March 2026",
+          "liked_users": []
+        },
+        {
+          "id": 1111,
+          "featured_image": "announcement_img_Yzwxa-1772958319.847_.jpg",
+          "featured_image_min": "min_img_Yzwxa-1772958319.847_.jpg",
+          "title": "OLD SCHOOL AKWAABA WEEK CELEBRATION",
+          "status": 1,
+          "views": 10,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-03-08T08:25:20.000000Z",
+          "updated_at": "2026-04-23T02:30:26.000000Z",
+          "likes_count": 2,
+          "likes_count_formatted": "2",
+          "views_count_formatted": "10",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Sunday, 8th March 2026",
+          "liked_users": [
+            {
+              "id": 408,
+              "user_id": 1536,
+              "announcement_id": 1111,
+              "created_at": "2026-03-08T08:40:51.000000Z",
+              "updated_at": "2026-03-08T08:40:51.000000Z",
+              "get_liker_info": {
+                "id": 1536,
+                "name": "Asiamah  Joseph ",
+                "email": "nk1457222@gmail.com",
+                "gender": "Male",
+                "user_img": null,
+                "index_no": 52241330019,
+                "current_level": "400",
+                "current_sem": 1,
+                "faculty_id": 3,
+                "dept_id": 21,
+                "program_id": 29,
+                "status": 1,
+                "yr_of_admission": "2023",
+                "yr_of_completion": "2026",
+                "last_seen": null,
+                "phone": "233245107632",
+                "created_at": "2024-11-04T19:09:42.000000Z",
+                "updated_at": "2026-03-08T08:38:49.000000Z"
+              }
+            },
+            {
+              "id": 412,
+              "user_id": 3107,
+              "announcement_id": 1111,
+              "created_at": "2026-03-15T21:32:39.000000Z",
+              "updated_at": "2026-03-15T21:32:39.000000Z",
+              "get_liker_info": {
+                "id": 3107,
+                "name": "Mensah Benjamin Deku",
+                "email": "mensahbenjamin700@gmail.com",
+                "gender": "male",
+                "user_img": null,
+                "index_no": 52543120025,
+                "current_level": "100",
+                "current_sem": 1,
+                "faculty_id": 3,
+                "dept_id": 20,
+                "program_id": 33,
+                "status": 1,
+                "yr_of_admission": "2026",
+                "yr_of_completion": "2030",
+                "last_seen": null,
+                "phone": "0599309396",
+                "created_at": "2026-01-09T05:09:28.000000Z",
+                "updated_at": "2026-01-09T05:11:14.000000Z"
+              }
+            }
+          ]
+        },
+        {
+          "id": 1109,
+          "featured_image": "announcement_img_uNRcu-1772957774.2413_.jpg",
+          "featured_image_min": "min_img_uNRcu-1772957774.2413_.jpg",
+          "title": "\ud83c\uddec\ud83c\uddedHappy Independence Day\ud83c\uddec\ud83c\udded",
+          "status": 1,
+          "views": 9,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-03-08T08:16:14.000000Z",
+          "updated_at": "2026-05-14T23:56:00.000000Z",
+          "likes_count": 2,
+          "likes_count_formatted": "2",
+          "views_count_formatted": "9",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Sunday, 8th March 2026",
+          "liked_users": [
+            {
+              "id": 409,
+              "user_id": 1536,
+              "announcement_id": 1109,
+              "created_at": "2026-03-08T08:41:12.000000Z",
+              "updated_at": "2026-03-08T08:41:12.000000Z",
+              "get_liker_info": {
+                "id": 1536,
+                "name": "Asiamah  Joseph ",
+                "email": "nk1457222@gmail.com",
+                "gender": "Male",
+                "user_img": null,
+                "index_no": 52241330019,
+                "current_level": "400",
+                "current_sem": 1,
+                "faculty_id": 3,
+                "dept_id": 21,
+                "program_id": 29,
+                "status": 1,
+                "yr_of_admission": "2023",
+                "yr_of_completion": "2026",
+                "last_seen": null,
+                "phone": "233245107632",
+                "created_at": "2024-11-04T19:09:42.000000Z",
+                "updated_at": "2026-03-08T08:38:49.000000Z"
+              }
+            },
+            {
+              "id": 415,
+              "user_id": 3756,
+              "announcement_id": 1109,
+              "created_at": "2026-04-16T02:49:21.000000Z",
+              "updated_at": "2026-04-16T02:49:21.000000Z",
+              "get_liker_info": {
+                "id": 3756,
+                "name": "Mohammed Abdul Hakim",
+                "email": "abdulhakimmohammed059@gmail.com",
+                "gender": "male",
+                "user_img": null,
+                "index_no": 52541360097,
+                "current_level": "100",
+                "current_sem": 1,
+                "faculty_id": 1,
+                "dept_id": 1,
+                "program_id": 1,
+                "status": 1,
+                "yr_of_admission": "2026",
+                "yr_of_completion": "2029",
+                "last_seen": null,
+                "phone": "0592046641",
+                "created_at": "2026-04-16T02:41:49.000000Z",
+                "updated_at": "2026-04-16T02:43:20.000000Z"
+              }
+            }
+          ]
+        },
+        {
+          "id": 1108,
+          "featured_image": "announcement_img_zJHgJ-1772957556.294_.jpg",
+          "featured_image_min": "min_img_zJHgJ-1772957556.294_.jpg",
+          "title": "GNUTS Pays Working Visit To Kumasi Technical University",
+          "status": 1,
+          "views": 7,
+          "admin_id": 152,
+          "category_id": 2,
+          "created_at": "2026-03-08T08:12:36.000000Z",
+          "updated_at": "2026-11-08T01:41:24.000000Z",
+          "likes_count": 1,
+          "likes_count_formatted": "1",
+          "views_count_formatted": "7",
+          "liked_by_auth_user": false,
+          "created_at_formatted": "Sunday, 8th March 2026",
+          "liked_users": [
+            {
+              "id": 421,
+              "user_id": 3601,
+              "announcement_id": 1108,
+              "created_at": "2026-05-28T10:07:46.000000Z",
+              "updated_at": "2026-05-28T10:07:46.000000Z",
+              "get_liker_info": {
+                "id": 3601,
+                "name": "Dankwah Alfred ",
+                "email": "alfreddankwah24@gmail.com",
+                "gender": "male",
+                "user_img": "user_img_4lcqZ-1779962827.8925_.jpg",
+                "index_no": 52520730006,
+                "current_level": "100",
+                "current_sem": 1,
+                "faculty_id": 3,
+                "dept_id": 20,
+                "program_id": 41,
+                "status": 1,
+                "yr_of_admission": "2026",
+                "yr_of_completion": "2027",
+                "last_seen": null,
+                "phone": "233530322981",
+                "created_at": "2026-02-04T13:11:38.000000Z",
+                "updated_at": "2026-05-28T10:07:07.000000Z"
+              }
+            }
+          ]
+        }
+      ],
+      "first_page_url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=1",
+      "from": 1,
+      "last_page": 35,
+      "last_page_url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=35",
+      "links": [
+        {
+          "url": null,
+          "label": "&laquo; Previous",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=1",
+          "label": "1",
+          "active": true
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=2",
+          "label": "2",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=3",
+          "label": "3",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=4",
+          "label": "4",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=5",
+          "label": "5",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=6",
+          "label": "6",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=7",
+          "label": "7",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=8",
+          "label": "8",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=9",
+          "label": "9",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=10",
+          "label": "10",
+          "active": false
+        },
+        {
+          "url": null,
+          "label": "...",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=34",
+          "label": "34",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=35",
+          "label": "35",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=2",
+          "label": "Next &raquo;",
+          "active": false
+        }
+      ],
+      "next_page_url": "https://app.src-kstu.com/api/v1/announcements/trending-news?page=2",
+      "path": "https://app.src-kstu.com/api/v1/announcements/trending-news",
+      "per_page": 10,
+      "prev_page_url": null,
+      "to": 10,
+      "total": 347
+    }
+  }
+}

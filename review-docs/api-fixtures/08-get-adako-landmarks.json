@@ -1,0 +1,183 @@
+{
+  "endpoint": "GET /api/v1/campus-map/adako-landmarks",
+  "status": 200,
+  "response": {
+    "success": "Campuses Response For adako-landmarks",
+    "campus_landmarks": {
+      "current_page": 1,
+      "data": [
+        {
+          "id": 16,
+          "img": "landmark_img_SyCu5-1722011725.4355_.jpg",
+          "latitude": "6.728297",
+          "longitude": "-1.492515",
+          "name": "GETFUND HALL",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T16:35:25.000000Z",
+          "updated_at": "2024-07-26T16:37:30.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 15,
+          "img": "landmark_img_elE1V-1722011245.678_.jpg",
+          "latitude": "6.726807",
+          "longitude": "-1.491108",
+          "name": "POLICE POST",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T16:27:25.000000Z",
+          "updated_at": "2024-07-26T19:14:35.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 14,
+          "img": "landmark_img_0kYX3-1722011047.1792_.jpg",
+          "latitude": " 6.73026",
+          "longitude": "-1.491937",
+          "name": "AGRIBUSINESS DEPT. VENTURE",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T16:24:07.000000Z",
+          "updated_at": "2024-07-26T16:24:55.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 13,
+          "img": "landmark_img_LxUJF-1722009636.2715_.jpg",
+          "latitude": "6.728021",
+          "longitude": "-1.49137",
+          "name": "ENGINERING WORKSHOP",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T16:00:36.000000Z",
+          "updated_at": "2024-07-26T16:04:23.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 12,
+          "img": "landmark_img_1vZHi-1722009045.1407_.jpg",
+          "latitude": "6.727594",
+          "longitude": "-1.491943",
+          "name": "CANTEEN",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T15:50:45.000000Z",
+          "updated_at": "2024-07-26T15:52:26.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 11,
+          "img": "landmark_img_cKGCs-1722008257.0262_.jpg",
+          "latitude": "6.728541",
+          "longitude": "-1.491953",
+          "name": "FABNET BLOCK",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T15:37:37.000000Z",
+          "updated_at": "2024-07-26T15:46:21.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 10,
+          "img": "landmark_img_FnXPP-1722008095.8264_.jpg",
+          "latitude": "6.728057",
+          "longitude": "-1.491771",
+          "name": "FURNITURE WORKSHOP",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T15:34:56.000000Z",
+          "updated_at": "2024-07-26T15:35:18.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 9,
+          "img": "landmark_img_KfDa2-1722007963.7057_.jpg",
+          "latitude": "6.727958",
+          "longitude": "-1.491446",
+          "name": "FOOTBALL PITCH",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T15:32:44.000000Z",
+          "updated_at": "2024-07-26T15:33:15.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 8,
+          "img": "landmark_img_sjskh-1722007152.2206_.jpg",
+          "latitude": "6.7293",
+          "longitude": "-1.490927",
+          "name": "FCAT (Fashion And Creative Arts Block)",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T15:19:12.000000Z",
+          "updated_at": "2024-07-26T15:21:04.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 7,
+          "img": "landmark_img_KsrCh-1722006327.3015_.jpg",
+          "latitude": "6.729359",
+          "longitude": "-1.492189",
+          "name": "LECTURE'S HOUSING 2",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T15:05:27.000000Z",
+          "updated_at": "2024-07-26T15:06:02.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 6,
+          "img": "landmark_img_V5VEA-1722006066.4569_.jpg",
+          "latitude": " 6.729599",
+          "longitude": "-1.492365",
+          "name": "LECTURE'S HOUSING1",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T15:01:06.000000Z",
+          "updated_at": "2024-07-26T15:01:59.000000Z",
+          "campus": "Adako Jachie Campus."
+        },
+        {
+          "id": 5,
+          "img": "landmark_img_joRM3-1722005060.938_.jpg",
+          "latitude": "6.728666",
+          "longitude": "-1.492433",
+          "name": "SRC HALL",
+          "campus_id": 2,
+          "status": 1,
+          "created_at": "2024-07-26T14:44:21.000000Z",
+          "updated_at": "2024-08-03T00:44:04.000000Z",
+          "campus": "Adako Jachie Campus."
+        }
+      ],
+      "first_page_url": "https://app.src-kstu.com/api/v1/campus-map/adako-landmarks?page=1",
+      "from": 1,
+      "last_page": 1,
+      "last_page_url": "https://app.src-kstu.com/api/v1/campus-map/adako-landmarks?page=1",
+      "links": [
+        {
+          "url": null,
+          "label": "&laquo; Previous",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/campus-map/adako-landmarks?page=1",
+          "label": "1",
+          "active": true
+        },
+        {
+          "url": null,
+          "label": "Next &raquo;",
+          "active": false
+        }
+      ],
+      "next_page_url": null,
+      "path": "https://app.src-kstu.com/api/v1/campus-map/adako-landmarks",
+      "per_page": 50,
+      "prev_page_url": null,
+      "to": 12,
+      "total": 12
+    }
+  }
+}

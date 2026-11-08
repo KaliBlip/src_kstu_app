@@ -1,0 +1,51 @@
+{
+  "endpoint": "GET /api/v1/claims/types",
+  "status": 200,
+  "response": {
+    "success": true,
+    "data": {
+      "current_page": 1,
+      "data": [
+        {
+          "id": 2,
+          "name": "SIC LIFE INSURANCE CLAIM APPLICATION",
+          "description": "GROUP LIFE AND GROUP FUNERAL DEATH CLAIM FORM",
+          "pdf_file": "claim_pdfs/media_yqd97i0L2S0Hz65NU6KL7FrSRICOLn7LhnGEtFDqdI1Fv3DNnjkBzup5x8ugL6liGY8Gl2PdS1qO5QauU4xeNSX8FAJHiIDkPU2nhVsnFDdu6iNecOhXbtP5at3YK-1757443744.3817_.pdf",
+          "status": 1,
+          "created_at": "2025-08-28T15:59:55.000000Z",
+          "updated_at": "2025-09-09T18:49:04.000000Z",
+          "pdf_file_url": "https://app.src-kstu.com/storage/claim_pdfs/media_yqd97i0L2S0Hz65NU6KL7FrSRICOLn7LhnGEtFDqdI1Fv3DNnjkBzup5x8ugL6liGY8Gl2PdS1qO5QauU4xeNSX8FAJHiIDkPU2nhVsnFDdu6iNecOhXbtP5at3YK-1757443744.3817_.pdf",
+          "required_document_types": [],
+          "optional_document_types": []
+        }
+      ],
+      "first_page_url": "https://app.src-kstu.com/api/v1/claims/types?page=1",
+      "from": 1,
+      "last_page": 1,
+      "last_page_url": "https://app.src-kstu.com/api/v1/claims/types?page=1",
+      "links": [
+        {
+          "url": null,
+          "label": "&laquo; Previous",
+          "active": false
+        },
+        {
+          "url": "https://app.src-kstu.com/api/v1/claims/types?page=1",
+          "label": "1",
+          "active": true
+        },
+        {
+          "url": null,
+          "label": "Next &raquo;",
+          "active": false
+        }
+      ],
+      "next_page_url": null,
+      "path": "https://app.src-kstu.com/api/v1/claims/types",
+      "per_page": 10,
+      "prev_page_url": null,
+      "to": 1,
+      "total": 1
+    }
+  }
+}
