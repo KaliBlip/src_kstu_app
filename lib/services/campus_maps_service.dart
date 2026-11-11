@@ -12,23 +12,24 @@ class CampusMapProvider extends ChangeNotifier {
 
   Future<List<CampusMapModel>> fetchNotice(String url) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = await getToken();
-    final response = await http.get(Uri.parse(url), headers: {
 
-      "Accept": "application/json",
-      'Authorization': 'Bearer $token'
-    });
+    // Use the URL as the cache key so each campus has its own cache
+    final cacheKey = 'cached_map_${url.hashCode}';
+    final cachedMaps = prefs.getString(cacheKey);
 
-    final cachedMaps =
-        prefs.getString('cached_map_page');
-
-            if (cachedMaps != null) {
+    if (cachedMaps != null) {
       final List<dynamic> cachedData = json.decode(cachedMaps);
       _map = cachedData.map((e) => CampusMapModel.fromJson(e)).toList();
       notifyListeners();
       return _map;
     }
 
+    // Only hit the network if no cache exists
+    String token = await getToken();
+    final response = await http.get(Uri.parse(url), headers: {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonData =
@@ -36,14 +37,13 @@ class CampusMapProvider extends ChangeNotifier {
       final List<dynamic> data = jsonData['data'];
       _map = data.map((e) => CampusMapModel.fromJson(e)).toList();
 
-      await prefs.setString(
-          'cached_map_page', json.encode(data));
+      await prefs.setString(cacheKey, json.encode(data));
       notifyListeners();
       return _map;
     } else if (response.statusCode == 401) {
       throw Exception(jsonDecode(response.body)['message']);
     } else {
-      throw Exception('Failed to fetch noticeboard!');
+      throw Exception('Failed to fetch campus map!');
     }
   }
   Future<String> getToken() async {
