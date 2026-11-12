@@ -17,9 +17,10 @@ class CampusMapNotifier extends _$CampusMapNotifier {
 
   Future<List<CampusMapModel>> fetchMaps(String url) async {
     final prefs = await SharedPreferences.getInstance();
-    final cachedMaps = prefs.getString('cached_map_page');
+    // Use url-based cache key so each campus has its own cache
+    final cacheKey = 'cached_map_${url.hashCode}';
+    final cachedMaps = prefs.getString(cacheKey);
 
-    // Return cached data if available
     if (cachedMaps != null) {
       final List<dynamic> cachedData = json.decode(cachedMaps);
       final maps = cachedData.map((e) => CampusMapModel.fromJson(e)).toList();
@@ -27,7 +28,6 @@ class CampusMapNotifier extends _$CampusMapNotifier {
       return maps;
     }
 
-    // Fetch from API
     final token = await ref.read(authTokenProvider.future);
     final response = await http.get(
       Uri.parse(url),
@@ -42,8 +42,7 @@ class CampusMapNotifier extends _$CampusMapNotifier {
       final List<dynamic> data = jsonData['data'];
       final maps = data.map((e) => CampusMapModel.fromJson(e)).toList();
 
-      // Cache the data
-      await prefs.setString('cached_map_page', json.encode(data));
+      await prefs.setString(cacheKey, json.encode(data));
 
       state = maps;
       return maps;
