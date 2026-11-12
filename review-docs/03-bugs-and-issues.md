@@ -6,38 +6,38 @@ Static review of the full `lib/` tree (plus build config) performed while prepar
 
 ## Summary
 
-| # | Severity | Area | Title |
-|---|---|---|---|
-| B-01 | 🔴 | Scholarships | "No" radio buttons set value to **Yes** |
-| B-02 | 🔴 | Claims | "Body been buried? No" sets value to **Yes** |
-| B-03 | 🔴 | Campus Map | Main & Adako campuses share one cache key → wrong campus shown |
-| B-04 | 🔴 | Claims | `Claim.fromJson` crashes on any null optional field → status list fails |
-| B-05 | 🔴 | Claims | Missing-document / no-token path pops the whole form (user loses input) |
-| B-06 | 🟠 | Auth | Riverpod `authTokenProvider` keeps stale token across login/logout |
-| B-07 | 🟠 | Auth | Logout never revokes token server-side & wipes onboarding/caches |
-| B-08 | 🟠 | Lists | Pull-to-refresh on Notice Board loads Trending News |
-| B-09 | 🟠 | Lists | Infinite scroll loops back to page 1 → endless duplicates |
-| B-10 | 🟠 | News detail | Like button doesn't update UI (cached Riverpod future) |
-| B-11 | 🟠 | Push | Payload key typo `announcemet_id` + stale `BuildContext` in listener |
-| B-12 | 🟠 | Welcome | Connectivity check compares unrelated types; SnackBars never shown |
-| B-13 | 🟠 | Profile | `_saveupdatedProfile` crashes when `/me` fails; upload errors leave spinner stuck |
-| B-14 | 🟠 | Downloads | Android writes to `/storage/emulated/0/Download` without scoped-storage handling |
-| B-15 | 🟠 | Claims/Sch. | `bool` fields typed strictly but Laravel returns `0/1` |
-| B-16 | 🟡 | Dates | `createdAtFormatted.split(', ')[1]` RangeError |
-| B-17 | 🟡 | Forms | `TextEditingController` created in `build()` (leak) |
-| B-18 | 🟡 | Forms | `setState` after `dispose` in submit `finally` blocks |
-| B-19 | 🟡 | Forms | No double-submit protection |
-| B-20 | 🟡 | Claims | Stepper "Documents" step uses index 3 instead of 2 |
-| B-21 | 🟡 | Claims | Copy-pasted validator messages / missing validators |
-| B-22 | 🟡 | Password | Confirm-password field visible, no match check, async in `setState` |
-| B-23 | 🟡 | Navigation | Pushing new `Dashboard` instances instead of popping |
-| B-24 | 🟡 | Models | `LandmarkModel.toJson` writes `campus_id`; `landmark_id` typed `String` |
-| B-25 | 🟡 | Models | `PaginationData` overrides `==` without `hashCode` |
-| B-26 | 🟡 | Downloads | `form['pdf_file_url']!` crashes for types without PDF |
-| B-27 | 🟡 | Auth service | `register()` passes `int` in form body → runtime TypeError; hard-coded IDs |
-| B-28 | 🟡 | Campus Map | Legacy service fires network call then ignores it when cache exists |
-| B-29 | 🟡 | Forms | `_formatDocumentType` crashes on empty segments |
-| B-30 | ⚪ | Architecture | Three parallel state-management layers |
+| # | Severity | Area | Title | Status |
+|---|---|---|---|---|
+| B-01 | 🔴 | Scholarships | "No" radio buttons set value to **Yes** | ✅ Fixed in `a49fd75` |
+| B-02 | 🔴 | Claims | "Body been buried? No" sets value to **Yes** | ✅ Fixed in `a49fd75` |
+| B-03 | 🔴 | Campus Map | Main & Adako campuses share one cache key → wrong campus shown | ✅ Fixed in `cbefa77` / `dfaf8e4` |
+| B-04 | 🔴 | Claims | `Claim.fromJson` crashes on any null optional field → status list fails | ✅ Fixed in `a49fd75` |
+| B-05 | 🔴 | Claims | Missing-document / no-token path pops the whole form (user loses input) | ✅ Fixed in `a49fd75` |
+| B-06 | 🟠 | Auth | Riverpod `authTokenProvider` keeps stale token across login/logout | Open |
+| B-07 | 🟠 | Auth | Logout never revokes token server-side & wipes onboarding/caches | Open |
+| B-08 | 🟠 | Lists | Pull-to-refresh on Notice Board loads Trending News | Open |
+| B-09 | 🟠 | Lists | Infinite scroll loops back to page 1 → endless duplicates | Open |
+| B-10 | 🟠 | News detail | Like button doesn't update UI (cached Riverpod future) | Open |
+| B-11 | 🟠 | Push | Payload key typo `announcemet_id` + stale `BuildContext` in listener | Open |
+| B-12 | 🟠 | Welcome | Connectivity check compares unrelated types; SnackBars never shown | ✅ Fixed in `a49fd75` |
+| B-13 | 🟠 | Profile | `_saveupdatedProfile` crashes when `/me` fails; upload errors leave spinner stuck | Open |
+| B-14 | 🟠 | Downloads | Android writes to `/storage/emulated/0/Download` without scoped-storage handling | Open |
+| B-15 | 🟠 | Claims/Sch. | `bool` fields typed strictly but Laravel returns `0/1` | ✅ Fixed in `a49fd75` (`Claim`) |
+| B-16 | 🟡 | Dates | `createdAtFormatted.split(', ')[1]` RangeError | Open |
+| B-17 | 🟡 | Forms | `TextEditingController` created in `build()` (leak) | Open |
+| B-18 | 🟡 | Forms | `setState` after `dispose` in submit `finally` blocks | Open |
+| B-19 | 🟡 | Forms | No double-submit protection | Open |
+| B-20 | 🟡 | Claims | Stepper "Documents" step uses index 3 instead of 2 | Open |
+| B-21 | 🟡 | Claims | Copy-pasted validator messages / missing validators | Open |
+| B-22 | 🟡 | Password | Confirm-password field visible, no match check, async in `setState` | Open |
+| B-23 | 🟡 | Navigation | Pushing new `Dashboard` instances instead of popping | Open |
+| B-24 | 🟡 | Models | `LandmarkModel.toJson` writes `campus_id`; `landmark_id` typed `String` | Open |
+| B-25 | 🟡 | Models | `PaginationData` overrides `==` without `hashCode` | Open |
+| B-26 | 🟡 | Downloads | `form['pdf_file_url']!` crashes for types without PDF | Open |
+| B-27 | 🟡 | Auth service | `register()` passes `int` in form body → runtime TypeError; hard-coded IDs | Open |
+| B-28 | 🟡 | Campus Map | Legacy service fires network call then ignores it when cache exists | Open |
+| B-29 | 🟡 | Forms | `_formatDocumentType` crashes on empty segments | Open |
+| B-30 | ⚪ | Architecture | Three parallel state-management layers | ✅ Fixed in `a49fd75` (migrated all to Riverpod) |
 | B-31 | ⚪ | Deps | Two connectivity packages (one discontinued) |
 | B-32 | ⚪ | Dead code | Unused pagination provider/service with stale staging URL & 2 s fake delay |
 | B-33 | ⚪ | Security | Token in plain SharedPreferences; OneSignal verbose logs in prod |
