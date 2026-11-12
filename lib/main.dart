@@ -1,13 +1,7 @@
 import 'package:src_kstu_app/feature/pages/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:src_kstu_app/services/connectivity_provider.dart';
-import 'package:src_kstu_app/services/notice_board.dart';
-import 'package:src_kstu_app/services/trending_news.dart';
-import 'package:src_kstu_app/services/campus_maps_service.dart';
-import 'package:src_kstu_app/services/landmark_places.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,17 +14,8 @@ void main() async {
   OneSignal.Notifications.requestPermission(true);
 
   runApp(
-    ProviderScope(
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
-          ChangeNotifierProvider(create: (_) => NoticeBoardProvider()),
-          ChangeNotifierProvider(create: (_) => TrendingNewsProvider()),
-          ChangeNotifierProvider(create: (_) => CampusMapProvider()),
-          ChangeNotifierProvider(create: (_) => LandmarkProvider()),
-        ],
-        child: const MyApp(),
-      ),
+    const ProviderScope(
+      child: MyApp(),
     ),
   );
 }

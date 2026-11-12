@@ -4,24 +4,24 @@ import 'package:src_kstu_app/feature/pages/campus_map_shimmer.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/models/campus_map_model.dart';
 import 'package:src_kstu_app/models/constant.dart';
-import 'package:src_kstu_app/services/campus_maps_service.dart';
+import 'package:src_kstu_app/providers/campus_map_provider.dart';
+import 'package:src_kstu_app/providers/connectivity_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:src_kstu_app/feature/pages/error_pages/no_internet.dart';
-import 'package:src_kstu_app/services/connectivity_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CampusMap extends StatefulWidget {
+class CampusMap extends ConsumerStatefulWidget {
   final String url;
   final String title;
   const CampusMap({super.key, required this.url, required this.title});
 
   @override
-  State<CampusMap> createState() => _CampusMapState();
+  ConsumerState<CampusMap> createState() => _CampusMapState();
 }
 
-class _CampusMapState extends State<CampusMap> {
+class _CampusMapState extends ConsumerState<CampusMap> {
   bool isOpen = false;
 
   // void mylauntcher(String url) async {
@@ -40,7 +40,6 @@ class _CampusMapState extends State<CampusMap> {
 
   @override
   Widget build(BuildContext context) {
-    final mapProvider = Provider.of<CampusMapProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: topColor,
       body: Center(
@@ -124,15 +123,16 @@ class _CampusMapState extends State<CampusMap> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 18.0, vertical: 10),
-                          child: Consumer<ConnectivityProvider>(
-                              builder: (context, provider, _) {
-                            if (provider.status ==
-                                ConnectivityStatus.Offline) {
+                          child: Consumer(
+                              builder: (context, ref, _) {
+                            final status = ref.watch(connectivityNotifierProvider);
+                            if (status ==
+                                ConnectivityStatus.offline) {
                               //
                               return noInternet();
                             } else {
                               return FutureBuilder<List<CampusMapModel>>(
-                                  future: mapProvider.fetchNotice(widget.url),
+                                  future: ref.read(campusMapNotifierProvider.notifier).fetchMaps(widget.url),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {

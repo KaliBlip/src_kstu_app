@@ -2,23 +2,16 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:src_kstu_app/components/colors.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/models/constant.dart';
-import 'package:src_kstu_app/services/trending_news.dart';
+import 'package:src_kstu_app/providers/trending_news_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AboutPage extends StatefulWidget {
+class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
 
   @override
-  State<AboutPage> createState() => _AboutPageState();
-}
-
-class _AboutPageState extends State<AboutPage> {
-  @override
-  Widget build(BuildContext context) {
-    final trendProvider =
-        Provider.of<TrendingNewsProvider>(context, listen: false);
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: topColor,
       body: Center(
@@ -97,7 +90,7 @@ class _AboutPageState extends State<AboutPage> {
                                 height: 5.0,
                               ),
                               FutureBuilder(
-                                future: trendProvider.fetchTrend(1),
+                                future: ref.read(trendingNewsNotifierProvider.notifier).fetchTrend(1),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
                                     return Text("${snapshot.error}");

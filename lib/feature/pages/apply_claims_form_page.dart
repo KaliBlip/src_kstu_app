@@ -384,7 +384,7 @@ class _ApplyClaimsFormPageState extends State<ApplyClaimsFormPage> {
                         value: false,
                         groupValue: _hasthebodyBeenBuried,
                         onChanged: (value) => setState(
-                            () => _hasthebodyBeenBuried = !(value ?? false)),
+                            () => _hasthebodyBeenBuried = value ?? false),
                       ),
                       const Text('No'),
                     ],
@@ -511,7 +511,6 @@ class _ApplyClaimsFormPageState extends State<ApplyClaimsFormPage> {
     if (_formKey.currentState!.validate()) {
       for (var entry in requiredDocuments.entries) {
         if (entry.value == null) {
-          Navigator.pop(context);
           _showSnackBar(
             SnackBar(
                 content: Text('${_formatDocumentType(entry.key)} is required'),
@@ -532,7 +531,6 @@ class _ApplyClaimsFormPageState extends State<ApplyClaimsFormPage> {
         String? token = pref.getString("token");
 
         if (token == null) {
-          Navigator.pop(context);
           _showSnackBar(
             SnackBar(
                 content: const Text('You are not logged in'),

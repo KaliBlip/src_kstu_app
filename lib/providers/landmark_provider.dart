@@ -36,6 +36,9 @@ class LandmarkNotifier extends _$LandmarkNotifier {
       throw Exception('Failed to fetch landmark places!');
     }
   }
+
+  // Alias for compatibility
+  Future<List<LandmarkModel>> fetchLandmarks(int trendId) => fetchLandmarkPlaces(trendId);
 }
 
 // Auto-refresh provider for real-time updates

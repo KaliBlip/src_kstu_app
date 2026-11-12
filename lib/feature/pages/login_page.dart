@@ -1,5 +1,5 @@
 import 'package:src_kstu_app/components/colors.dart';
-import 'package:src_kstu_app/services/connectivity_provider.dart';
+import 'package:src_kstu_app/providers/connectivity_provider.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/feature/pages/forgot_password.dart';
 import 'package:src_kstu_app/models/api_response.dart';
@@ -7,9 +7,9 @@ import 'package:src_kstu_app/models/user.dart';
 import 'package:src_kstu_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 // import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -131,12 +131,14 @@ class _LoginPageState extends State<LoginPage> {
   // }
 
   void _loginUser() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
+    final connectivityResult = await Connectivity().checkConnectivity();
     ApiResponse response =
         await login(emailController.text, passwordController.text);
     if (response.error == null) {
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
+      final isConnected = connectivityResult.contains(ConnectivityResult.mobile) ||
+          connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.ethernet);
+      if (isConnected) {
         _saveAndRedirectToDashboard(response.data as User);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -263,10 +265,11 @@ class _LoginPageState extends State<LoginPage> {
                                 width: MediaQuery.of(context).size.width / 2,
                               ),
                             ]),
-                            Consumer<ConnectivityProvider>(
-                                builder: (context, provider, _) {
-                              if (provider.status ==
-                                  ConnectivityStatus.Offline) {
+                            Consumer(
+                                builder: (context, ref, _) {
+                              final status = ref.watch(connectivityNotifierProvider);
+                              if (status ==
+                                  ConnectivityStatus.offline) {
                                 SnackBar(
                                     content: Text("No internet connection"),
                                     backgroundColor: topColor,

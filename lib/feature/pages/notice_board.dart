@@ -5,10 +5,10 @@ import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/feature/pages/trending_shimmer.dart';
 import 'package:src_kstu_app/models/announcement.dart';
 import 'package:src_kstu_app/models/constant.dart';
-import 'package:src_kstu_app/services/connectivity_provider.dart';
-import 'package:src_kstu_app/services/notice_board.dart';
+import 'package:src_kstu_app/providers/connectivity_provider.dart';
+import 'package:src_kstu_app/providers/notice_board_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -16,14 +16,14 @@ import 'package:src_kstu_app/components/trending_component.dart';
 import 'package:src_kstu_app/feature/pages/error_pages/no_internet.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AllNoticeBoardPage extends StatefulWidget {
+class AllNoticeBoardPage extends ConsumerStatefulWidget {
   const AllNoticeBoardPage({super.key});
 
   @override
-  State<AllNoticeBoardPage> createState() => _AllNoticeBoardPageState();
+  ConsumerState<AllNoticeBoardPage> createState() => _AllNoticeBoardPageState();
 }
 
-class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
+class _AllNoticeBoardPageState extends ConsumerState<AllNoticeBoardPage> {
   bool isLoading = false;
 
   Future<void> likeAnnouncement(int category_id, int status) async {
@@ -81,8 +81,6 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
     // ignore: unused_local_variable
     SimpleFontelicoProgressDialog _dialog =
         SimpleFontelicoProgressDialog(context: context);
-    final noticeboardProvider =
-        Provider.of<NoticeBoardProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: topColor,
       body: Container(
@@ -141,9 +139,10 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
             )),
             Expanded(
                 flex: 9,
-                child: Consumer<ConnectivityProvider>(
-                    builder: (context, provider, _) {
-                  if (provider.status == ConnectivityStatus.Offline) {
+                child: Consumer(
+                    builder: (context, ref, _) {
+                  final status = ref.watch(connectivityNotifierProvider);
+                  if (status == ConnectivityStatus.offline) {
                     return Container(
                       height: MediaQuery.of(context).size.height,
                       width: double.infinity,
@@ -174,7 +173,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                 height: MediaQuery.of(context).size.height,
                                 child: FutureBuilder<List<Announcement>>(
                                     future:
-                                        noticeboardProvider.fetchNotice(1),
+                                        ref.read(noticeBoardNotifierProvider.notifier).fetchNotice(1),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
@@ -183,7 +182,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                         return noInternet();
                                       } else {
                                         final noticeBoardData =
-                                            noticeboardProvider.notice;
+                                            snapshot.data ?? [];
                                         return Padding(
                                           padding:
                                               const EdgeInsets.all(8.0),

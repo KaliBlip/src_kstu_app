@@ -295,7 +295,7 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
                       value: false,
                       groupValue: _isParentAlive,
                       onChanged: (value) =>
-                          setState(() => _isParentAlive = !(value ?? false)),
+                          setState(() => _isParentAlive = value ?? false),
                     ),
                     const Text('No'),
                   ],
@@ -386,7 +386,7 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
                       value: false,
                       groupValue: _hasBenefitedBefore,
                       onChanged: (value) => setState(
-                          () => _hasBenefitedBefore = !(value ?? false)),
+                          () => _hasBenefitedBefore = value ?? false),
                     ),
                     const Text('No', style: TextStyle(fontSize: 11),),
                   ],

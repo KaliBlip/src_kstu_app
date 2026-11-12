@@ -4,11 +4,11 @@ import 'dart:convert';
 import 'package:src_kstu_app/feature/pages/news_details.dart';
 import 'package:src_kstu_app/feature/pages/trending_shimmer.dart';
 import 'package:src_kstu_app/models/constant.dart';
-import 'package:src_kstu_app/services/notice_board.dart';
+import 'package:src_kstu_app/providers/notice_board_provider.dart';
+import 'package:src_kstu_app/providers/trending_news_provider.dart';
 import 'package:src_kstu_app/components/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:src_kstu_app/services/trending_news.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:async/async.dart';
@@ -18,7 +18,7 @@ import 'package:google_fonts/google_fonts.dart';
 enum AnnouncementLoadMoreStatus { LOADING, STABLE }
 
 // ignore: must_be_immutable
-class TrendingComponent extends StatefulWidget {
+class TrendingComponent extends ConsumerStatefulWidget {
   final List<Announcement>? gottenData;
   int page;
   final bool isTrending;
@@ -34,10 +34,10 @@ class TrendingComponent extends StatefulWidget {
       required this.hasLimit});
 
   @override
-  State<TrendingComponent> createState() => _TrendingComponentState();
+  ConsumerState<TrendingComponent> createState() => _TrendingComponentState();
 }
 
-class _TrendingComponentState extends State<TrendingComponent> {
+class _TrendingComponentState extends ConsumerState<TrendingComponent> {
   final int maxPaginatedAnnouncementsValue = 5;
   AnnouncementLoadMoreStatus loadMoreStatus = AnnouncementLoadMoreStatus.STABLE;
   final ScrollController scrollController = new ScrollController();
@@ -65,10 +65,6 @@ class _TrendingComponentState extends State<TrendingComponent> {
   }
 
   bool onNotification(ScrollNotification notification) {
-    final trendProvider =
-        Provider.of<TrendingNewsProvider>(context, listen: false);
-    final noticeboardProvider =
-        Provider.of<NoticeBoardProvider>(context, listen: false);
     if (!widget.hasLimit) {
       // if limit is specified,then no need to continue bringing additional data on scroll
 
@@ -90,7 +86,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
 // ................
             if (widget.isTrending) {
               announcementOperation = CancelableOperation.fromFuture(
-                      trendProvider.fetchTrend(currentPageNumber))
+                      ref.read(trendingNewsNotifierProvider.notifier).fetchTrend(currentPageNumber))
                   .then((announcementObject) {
                 setState(() {
                   dataLoading = false;
@@ -120,7 +116,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
               });
             } else {
               announcementOperation = CancelableOperation.fromFuture(
-                      noticeboardProvider.fetchNotice(currentPageNumber))
+                      ref.read(noticeBoardNotifierProvider.notifier).fetchNotice(currentPageNumber))
                   .then((announcementObject) {
                 setState(() {
                   dataLoading = false;
@@ -202,14 +198,10 @@ class _TrendingComponentState extends State<TrendingComponent> {
 
   Future refreshAnnouncements() async {
     setState(() {
-      final trendProvider =
-          Provider.of<TrendingNewsProvider>(context, listen: false);
-      final noticeboardProvider =
-          Provider.of<NoticeBoardProvider>(context, listen: false);
       announcements!.clear();
-      announcements != widget.isTrending
-          ? trendProvider.fetchTrend(1)
-          : noticeboardProvider.fetchNotice(1);
+      widget.isTrending
+          ? ref.read(trendingNewsNotifierProvider.notifier).fetchTrend(1)
+          : ref.read(noticeBoardNotifierProvider.notifier).fetchNotice(1);
     });
 
     // SQq7t8AF

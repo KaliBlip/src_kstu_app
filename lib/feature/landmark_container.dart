@@ -1,22 +1,17 @@
-import 'package:src_kstu_app/services/landmark_places.dart';
+import 'package:src_kstu_app/models/land-marks-model.dart';
+import 'package:src_kstu_app/providers/landmark_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LandmarkContainer extends StatefulWidget {
+class LandmarkContainer extends ConsumerWidget {
   final int title;
   const LandmarkContainer({super.key, required this.title});
 
   @override
-  State<LandmarkContainer> createState() => _LandmarkContainerState();
-}
-
-class _LandmarkContainerState extends State<LandmarkContainer> {
-  @override
-  Widget build(BuildContext context) {
-    final places = Provider.of<LandmarkProvider>(context, listen: false);
-    return FutureBuilder(
-      future: places.fetchLandmarkPlace(widget.title),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FutureBuilder<List<LandmarkModel>>(
+      future: ref.read(landmarkNotifierProvider.notifier).fetchLandmarkPlaces(title),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(

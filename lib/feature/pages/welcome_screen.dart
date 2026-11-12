@@ -1,12 +1,10 @@
 import 'package:src_kstu_app/components/colors.dart';
 import 'package:src_kstu_app/models/constant.dart';
-import 'package:src_kstu_app/services/connectivity_provider.dart';
+import 'package:src_kstu_app/providers/connectivity_provider.dart';
 import 'package:src_kstu_app/feature/pages/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
-import 'package:src_kstu_app/services/connectivity_helper.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -119,28 +117,10 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                           ],
                         ),
                       )),
-                  Consumer<ConnectivityProvider>(
-                      builder: (context, provider, _) {
-                 return FutureBuilder<ConnectivityResult>(
-                future: ConnectivityHelper().checkConnectivity(), // Your asynchronous function
-                builder: (context, snapshot) {
-           if (snapshot.connectionState == ConnectionState.done) {
-            
-                if (snapshot.data ==
-                        ConnectivityStatus.Offline) {
-                      SnackBar(
-                          content: Text("No internet connection"),
-                          backgroundColor: topColor,
-                          behavior: SnackBarBehavior.floating,
-                          action: SnackBarAction(
-                            label: 'Dismiss',
-                            disabledTextColor: Colors.white,
-                            textColor: Colors.yellow,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                          ));
+                  Consumer(
+                      builder: (context, ref, _) {
+                    final status = ref.watch(connectivityNotifierProvider);
+                    if (status == ConnectivityStatus.offline) {
                       return Expanded(
                           flex: 2,
                           child: Container(
@@ -270,13 +250,6 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                             ),
                           ));
                     }
-            
-            
-                }else {
-        return CircularProgressIndicator();
-                  }
-            
-              });
                   })
                 ],
               )

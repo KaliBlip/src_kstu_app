@@ -53,6 +53,9 @@ class CampusMapNotifier extends _$CampusMapNotifier {
     }
   }
 
+  // Alias for compatibility with legacy code
+  Future<List<CampusMapModel>> fetchNotice(String url) => fetchMaps(url);
+
   Future<CampusMapModel> fetchMapDetails(int mapId) async {
     final token = await ref.read(authTokenProvider.future);
     final response = await http.get(
