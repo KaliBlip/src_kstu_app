@@ -10,7 +10,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class WelcomeScreenPage extends StatefulWidget {
   const WelcomeScreenPage({super.key});
 
@@ -23,7 +22,7 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
   late Animation<double> animation1;
   late AnimationController controller1;
 
-    Future<void> launchToRegister() async {
+  Future<void> launchToRegister() async {
     await launchUrl(
       Uri.parse('$asset_base_url/user/register'),
     );
@@ -38,7 +37,6 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
     final CurvedAnimation curvedAnimation1 =
         CurvedAnimation(parent: controller1, curve: Curves.easeInOut);
     animation1 = Tween(begin: 100.0, end: 240.0).animate(curvedAnimation1);
-
 
     controller1.forward();
   }
@@ -92,191 +90,188 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
               Column(
                 children: [
                   Expanded(
-                      flex: 3,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                            color: topColor,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(30))),
-                        child: Column(
-                          mainAxisAlignment:
-                              MainAxisAlignment.center,
-                          crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                          children: [
-                            AnimatedBuilder(
-                                animation: animation1,
-                                builder: (context, child) =>
-                                    containerLogo(context)),
-                            // const SizedBox(
-                            //   height: 25,
-                            // ),
-                            // AnimatedBuilder(
-                            //     animation: animation1,
-                            //     builder: (context, child) =>
-                            //         textAnimated(context)),
-                          ],
-                        ),
-                      )),
+                    flex: 3,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                      ),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          // Background image
+                          Image.asset(
+                            "assets/images/hero_image.jpeg",
+                            fit: BoxFit.cover,
+                          ),
+                          // topColor overlay with opacity
+                          Container(
+                            color: topColor.withOpacity(0.9),
+                          ),
+                          Center(
+                            child: AnimatedBuilder(
+                              animation: animation1,
+                              builder: (context, child) =>
+                                  containerLogo(context),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Consumer<ConnectivityProvider>(
                       builder: (context, provider, _) {
-                 return FutureBuilder<ConnectivityResult>(
-                future: ConnectivityHelper().checkConnectivity(), // Your asynchronous function
-                builder: (context, snapshot) {
-           if (snapshot.connectionState == ConnectionState.done) {
-            
-                if (snapshot.data ==
-                        ConnectivityStatus.Offline) {
-                      SnackBar(
-                          content: Text("No internet connection"),
-                          backgroundColor: topColor,
-                          behavior: SnackBarBehavior.floating,
-                          action: SnackBarAction(
-                            label: 'Dismiss',
-                            disabledTextColor: Colors.white,
-                            textColor: Colors.yellow,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                          ));
-                      return Expanded(
-                          flex: 2,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: bottomColor,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(30))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 18.0, vertical: 15.0),
-                              child: Column(
-                                children: [
-                                  Spacer(),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        color: topColor,
-                                        borderRadius:
-                                            BorderRadius.circular(
-                                                10)),
-                                    child: const Center(
-                                      child: Text(
-                                        "No internet connection",
-                                        style: TextStyle(
-                                            color: bottomColor,
-                                            fontSize: 20,
-                                            fontWeight:
-                                                FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
-                            ),
-                          ));
-                    } else {
-                      return Expanded(
-                          flex: 2,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: bottomColor,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(30))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 18.0, vertical: 15.0),
-                              child: Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 60,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      _dialog.show(
-                                          message: 'Waiting...',
-                                          type:
-                                              SimpleFontelicoProgressDialogType
-                                                  .hurricane);
-                                      await Future.delayed(
-                                          Duration(seconds: 1));
-                                      _dialog.hide();
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: ((context) =>
-                                                  const LoginPage())));
+                    return FutureBuilder<ConnectivityResult>(
+                        future: ConnectivityHelper()
+                            .checkConnectivity(), // Your asynchronous function
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.data == ConnectivityStatus.Offline) {
+                              SnackBar(
+                                  content: Text("No internet connection"),
+                                  backgroundColor: topColor,
+                                  behavior: SnackBarBehavior.floating,
+                                  action: SnackBarAction(
+                                    label: 'Dismiss',
+                                    disabledTextColor: Colors.white,
+                                    textColor: Colors.yellow,
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context)
+                                          .hideCurrentSnackBar();
                                     },
-                                    child: Container(
-                                      height: 50,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                          color: topColor,
-                                          borderRadius:
-                                              BorderRadius.circular(
-                                                  10)),
-                                      child: Center(
-                                        child: Text(
-                                          "Tap To Login",
-                                          style: GoogleFonts.poppins(
-                                              color: bottomColor,
-                                              fontSize: 20,
-                                              fontWeight:
-                                                  FontWeight.bold),
-                                        ),
+                                  ));
+                              return Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: bottomColor,
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(30))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0, vertical: 15.0),
+                                      child: Column(
+                                        children: [
+                                          Spacer(),
+                                          Container(
+                                            height: 50,
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                                color: topColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: const Center(
+                                              child: Text(
+                                                "No internet connection",
+                                                style: TextStyle(
+                                                    color: bottomColor,
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          Spacer(),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      _dialog.show(
-                                          message: 'Waiting...',
-                                          type:
-                                              SimpleFontelicoProgressDialogType
-                                                  .hurricane);
-                                      await Future.delayed(
-                                          Duration(seconds: 1));
-                                      _dialog.hide();
-                                      launchToRegister();
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                          color: topColor,
-                                          borderRadius:
-                                              BorderRadius.circular(
-                                                  10)),
-                                      child: Center(
-                                        child: Text(
-                                          "Tap To Register",
-                                          style: GoogleFonts.poppins(
-                                              color: bottomColor,
-                                              fontSize: 20,
-                                              fontWeight:
-                                                  FontWeight.bold),
-                                        ),
+                                  ));
+                            } else {
+                              return Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: bottomColor,
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(30))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0, vertical: 15.0),
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(
+                                            height: 60,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              _dialog.show(
+                                                  message: 'Waiting...',
+                                                  type:
+                                                      SimpleFontelicoProgressDialogType
+                                                          .hurricane);
+                                              await Future.delayed(
+                                                  Duration(seconds: 1));
+                                              _dialog.hide();
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: ((context) =>
+                                                          const LoginPage())));
+                                            },
+                                            child: Container(
+                                              height: 50,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                  color: topColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Center(
+                                                child: Text(
+                                                  "Tap To Login",
+                                                  style: GoogleFonts.poppins(
+                                                      color: bottomColor,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              _dialog.show(
+                                                  message: 'Waiting...',
+                                                  type:
+                                                      SimpleFontelicoProgressDialogType
+                                                          .hurricane);
+                                              await Future.delayed(
+                                                  Duration(seconds: 1));
+                                              _dialog.hide();
+                                              launchToRegister();
+                                            },
+                                            child: Container(
+                                              height: 50,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                  color: topColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Center(
+                                                child: Text(
+                                                  "Tap To Register",
+                                                  style: GoogleFonts.poppins(
+                                                      color: bottomColor,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ));
-                    }
-            
-            
-                }else {
-        return CircularProgressIndicator();
-                  }
-            
-              });
+                                  ));
+                            }
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        });
                   })
                 ],
               )

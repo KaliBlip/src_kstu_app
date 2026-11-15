@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:src_kstu_app/components/app_animations.dart';
 
 class LoadingPage extends ConsumerStatefulWidget {
   const LoadingPage({super.key});
@@ -220,47 +221,62 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
       backgroundColor: topColor,
       body: Semantics(
         label: "Loading page",
-        child: SafeArea(
-          child: Consumer(builder: (context, ref, _) {
-            final connectivityStatus = ref.watch(connectivityStreamProvider);
-            
-            return connectivityStatus.when(
-              data: (status) {
-                if (status == ConnectivityStatus.offline) {
-                  return _buildOfflineContent();
-                }
-                return _buildLoadingContent();
-              },
-              loading: () => _buildLoadingContent(),
-              error: (error, stack) => _buildLoadingContent(),
-            );
-          }),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // 1. Full-screen background image
+            Image.asset(
+              "assets/images/hero_image.jpeg",
+              fit: BoxFit.cover,
+            ),
+
+            // 2. topColor overlay with opacity
+            Container(
+              color: topColor.withOpacity(0.9), // adjust 0.0 - 1.0
+            ),
+            SafeArea(
+              child: Consumer(builder: (context, ref, _) {
+                final connectivityStatus =
+                    ref.watch(connectivityStreamProvider);
+
+                return connectivityStatus.when(
+                  data: (status) {
+                    if (status == ConnectivityStatus.offline) {
+                      return _buildOfflineContent();
+                    }
+                    return _buildLoadingContent();
+                  },
+                  loading: () => _buildLoadingContent(),
+                  error: (error, stack) => _buildLoadingContent(),
+                );
+              }),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildOfflineContent() {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      color: topColor,
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(),
+            const Spacer(),
             Container(
               width: 240,
               height: 240,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/images/f.png"),
+                  image: AssetImage("assets/images/kstu_src_logo.png"),
                   fit: BoxFit.contain,
                 ),
               ),
-            ),
+            ).appPopIn(duration: AppMotion.slow),
             const SizedBox(height: 20),
             Center(
               child: Text(
@@ -269,11 +285,11 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
                 style: GoogleFonts.poppins(
                   color: bottomColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
-            ),
-            Spacer(),
+            ).appEntrance(delay: const Duration(milliseconds: 300)),
+            const Spacer(),
             Center(
               child: Text(
                 "No internet connection",
@@ -283,7 +299,7 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
                   fontSize: 18,
                 ),
               ),
-            ),
+            ).appEntrance(delay: const Duration(milliseconds: 420)),
           ],
         ),
       ),
@@ -291,28 +307,27 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
   }
 
   Widget _buildLoadingContent() {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      color: topColor,
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(),
+            const Spacer(),
             Container(
-              width: 240,
-              height: 240,
-              decoration: BoxDecoration(
+              width: 320,
+              height: 320,
+              decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/images/f.png"),
+                  image: AssetImage("assets/images/kstu_src_logo.png"),
                   fit: BoxFit.contain,
                 ),
               ),
-            ),
+            ).appPopIn(duration: AppMotion.slow),
             const SizedBox(height: 20),
-            Spacer(),
+            const Spacer(),
             Column(
               spacing: 12,
               children: [
@@ -323,15 +338,15 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
                 RandomQouteGenerator(),
                 Text(
                   textAlign: TextAlign.center,
-                  "- Students Representative Council -",
+                  "KsTU Students Representative Council",
                   style: GoogleFonts.poppins(
                     color: bottomColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 16,
                   ),
                 ),
               ],
-            ),
+            ).appEntrance(delay: const Duration(milliseconds: 350)),
           ],
         ),
       ),
