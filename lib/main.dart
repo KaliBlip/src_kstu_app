@@ -8,8 +8,9 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.Debug.setLogLevel(OSLogLevel.none);
   OneSignal.initialize("a8a3a92a-86cd-41b5-8efe-2e5badaf01d0");
+  OneSignal.Notifications.requestPermission(true);
   _listenForNotificationClicks();
 
   runApp(
