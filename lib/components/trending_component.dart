@@ -7,6 +7,7 @@ import 'package:src_kstu_app/models/constant.dart';
 import 'package:src_kstu_app/providers/notice_board_provider.dart';
 import 'package:src_kstu_app/providers/trending_news_provider.dart';
 import 'package:src_kstu_app/components/colors.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -166,33 +167,15 @@ class _TrendingComponentState extends ConsumerState<TrendingComponent> {
         });
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${data['message']}"),
+      showAppSnackBar(
+        message: "${data['message']}",
         backgroundColor: topColor,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${jsonDecode(response.body)['message']}"),
+      showAppSnackBar(
+        message: "${jsonDecode(response.body)['message']}",
         backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     }
   }
 

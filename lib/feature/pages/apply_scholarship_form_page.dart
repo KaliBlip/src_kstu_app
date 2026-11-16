@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:src_kstu_app/components/colors.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 import 'package:src_kstu_app/models/constant.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:src_kstu_app/models/scholarship_type_model.dart';
@@ -90,7 +91,9 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                    content: Text('Unable to access the selected file')),
+                  content: Text('Unable to access the selected file'),
+                  duration: Duration(seconds: 5),
+                ),
               );
             }
             return;
@@ -100,7 +103,10 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
           if (pickedFile.size > 10 * 1024 * 1024) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('File size exceeds 10MB limit')),
+                const SnackBar(
+                  content: Text('File size exceeds 10MB limit'),
+                  duration: Duration(seconds: 5),
+                ),
               );
             }
             return;
@@ -114,8 +120,10 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                  content: Text(
-                      'Invalid file type. Please select PDF, JPG, or PNG')),
+                content: Text(
+                    'Invalid file type. Please select PDF, JPG, or PNG'),
+                duration: Duration(seconds: 5),
+              ),
             );
           }
           return;
@@ -134,7 +142,7 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('${pickedFile.name} selected successfully'),
-              duration: const Duration(seconds: 2),
+              duration: const Duration(seconds: 5),
             ),
           );
         }
@@ -144,7 +152,7 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('No file selected'),
-              duration: Duration(seconds: 1),
+              duration: Duration(seconds: 5),
             ),
           );
         }
@@ -154,6 +162,7 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Platform error: ${e.message ?? 'Unknown error'}'),
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -162,6 +171,7 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error picking file: ${e.toString()}'),
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -564,23 +574,10 @@ class _ApplyScholarshipFormPageState extends State<ApplyScholarshipFormPage> {
           throw Exception('${responseData['message'] ?? 'Unknown error'}');
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            duration: const Duration(seconds: 3),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.red,
-            action: SnackBarAction(
-              label: 'OK',
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-              textColor: Colors.white,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
+        showAppSnackBar(
+          context: context,
+          message: e.toString(),
+          backgroundColor: Colors.red,
         );
       } finally {
         setState(() => _isSubmitting = false);

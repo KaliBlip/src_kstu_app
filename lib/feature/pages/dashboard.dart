@@ -158,7 +158,10 @@ class _DashboardState extends ConsumerState<Dashboard>
       debugPrint("Error in notification permission flow: $e");
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error requesting permissions: $e")),
+          SnackBar(
+            content: Text("Error requesting permissions: $e"),
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     }

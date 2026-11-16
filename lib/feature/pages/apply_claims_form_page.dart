@@ -125,7 +125,10 @@ class _ApplyClaimsFormPageState extends State<ApplyClaimsFormPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking file: ${e.toString()}')),
+        SnackBar(
+          content: Text('Error picking file: ${e.toString()}'),
+          duration: const Duration(seconds: 5),
+        ),
       );
     }
   }
@@ -515,7 +518,7 @@ class _ApplyClaimsFormPageState extends State<ApplyClaimsFormPage> {
             SnackBar(
                 content: Text('${_formatDocumentType(entry.key)} is required'),
                 backgroundColor: Colors.red,
-                duration: const Duration(seconds: 3),
+                duration: const Duration(seconds: 5),
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0))),
@@ -535,7 +538,7 @@ class _ApplyClaimsFormPageState extends State<ApplyClaimsFormPage> {
             SnackBar(
                 content: const Text('You are not logged in'),
                 backgroundColor: Colors.red,
-                duration: const Duration(seconds: 3),
+                duration: const Duration(seconds: 5),
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0))),
@@ -604,7 +607,7 @@ class _ApplyClaimsFormPageState extends State<ApplyClaimsFormPage> {
             SnackBar(
               content: Text(responseData['message']),
               backgroundColor: Colors.green,
-              duration: const Duration(seconds: 3),
+              duration: const Duration(seconds: 5),
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -621,7 +624,7 @@ class _ApplyClaimsFormPageState extends State<ApplyClaimsFormPage> {
           SnackBar(
             content: Text('Error: ${e.toString()}'),
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 5),
             behavior: SnackBarBehavior.floating,
           ),
         );

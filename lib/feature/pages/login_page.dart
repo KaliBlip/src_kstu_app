@@ -1,4 +1,5 @@
 import 'package:src_kstu_app/components/colors.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 import 'package:src_kstu_app/providers/connectivity_provider.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/feature/pages/forgot_password.dart';
@@ -141,40 +142,20 @@ class _LoginPageState extends State<LoginPage> {
       if (isConnected) {
         _saveAndRedirectToDashboard(response.data as User);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Please connect to the internet'),
+        showAppSnackBar(
+          message: 'Please connect to the internet',
           backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-          elevation: 2.0,
-          action: SnackBarAction(
-            label: 'Dismiss',
-            disabledTextColor: Colors.white,
-            textColor: Colors.yellow,
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ));
+        );
       }
     } else {
       // print(jsonEncode(response.data));
       setState(() {
         loading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
+      showAppSnackBar(
+        message: '${response.error}',
         backgroundColor: Colors.red.shade700,
-        elevation: 2.0,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     }
   }
 
@@ -206,20 +187,11 @@ class _LoginPageState extends State<LoginPage> {
     requestNotificationPermission_();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Dashboard()), (route) => false);
-    var name = await prefs.getString('name');
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Welcome, ${name}'),
+    var name = prefs.getString('name');
+    showAppSnackBar(
+      message: 'Welcome, ${name ?? ""}',
       backgroundColor: topColor,
-      behavior: SnackBarBehavior.floating,
-      action: SnackBarAction(
-        label: 'Dismiss',
-        disabledTextColor: Colors.white,
-        textColor: Colors.yellow,
-        onPressed: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        },
-      ),
-    ));
+    );
   }
 
   @override
@@ -270,19 +242,6 @@ class _LoginPageState extends State<LoginPage> {
                               final status = ref.watch(connectivityNotifierProvider);
                               if (status ==
                                   ConnectivityStatus.offline) {
-                                SnackBar(
-                                    content: Text("No internet connection"),
-                                    backgroundColor: topColor,
-                                    behavior: SnackBarBehavior.floating,
-                                    action: SnackBarAction(
-                                      label: 'Dismiss',
-                                      disabledTextColor: Colors.white,
-                                      textColor: Colors.yellow,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                      },
-                                    ));
                                 return Column(
                                   children: [
                                     Expanded(

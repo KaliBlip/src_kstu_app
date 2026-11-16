@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:src_kstu_app/components/colors.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/feature/pages/error_pages/no_internet.dart';
 import 'package:src_kstu_app/feature/pages/key_moments_container.dart';
@@ -47,8 +48,9 @@ class _DetailNewsState extends ConsumerState<DetailNews> {
         text: 'Save image',
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save image: $e')),
+      showAppSnackBar(
+        message: 'Failed to save image: $e',
+        backgroundColor: Colors.red,
       );
     }
   }
@@ -67,19 +69,10 @@ class _DetailNewsState extends ConsumerState<DetailNews> {
         isLoading = true;
       });
       final data = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${data['message']}"),
+      showAppSnackBar(
+        message: "${data['message']}",
         backgroundColor: topColor,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
       setState(() {
         isLoading = false;
       });
@@ -87,19 +80,10 @@ class _DetailNewsState extends ConsumerState<DetailNews> {
       setState(() {
         isLoading = true;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${jsonDecode(response.body)['message']}"),
+      showAppSnackBar(
+        message: "${jsonDecode(response.body)['message']}",
         backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     }
   }
 

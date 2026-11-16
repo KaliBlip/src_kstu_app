@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:src_kstu_app/components/colors.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/feature/pages/trending_shimmer.dart';
 import 'package:src_kstu_app/models/announcement.dart';
@@ -40,19 +41,10 @@ class _TrendingNewsPageState extends ConsumerState<TrendingNewsPage> {
         isLoading = true;
       });
       final data = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${data['message']}"),
+      showAppSnackBar(
+        message: "${data['message']}",
         backgroundColor: topColor,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
       setState(() {
         isLoading = false;
       });
@@ -60,19 +52,10 @@ class _TrendingNewsPageState extends ConsumerState<TrendingNewsPage> {
       setState(() {
         isLoading = true;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${jsonDecode(response.body)['message']}"),
+      showAppSnackBar(
+        message: "${jsonDecode(response.body)['message']}",
         backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     }
   }
 

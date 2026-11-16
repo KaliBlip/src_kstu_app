@@ -1,4 +1,5 @@
 import 'package:src_kstu_app/components/colors.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 import 'package:src_kstu_app/feature/pages/dashboard.dart';
 import 'package:src_kstu_app/models/api_response.dart';
 import 'package:src_kstu_app/services/user_service.dart';
@@ -38,20 +39,10 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
     if (response.error == null) {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (contex) => Dashboard()));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Password updated successfully'),
+      showAppSnackBar(
+        message: 'Password updated successfully',
         backgroundColor: topColor,
-        elevation: 2.0,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     } else {
       // print('response.data');
       // print(response.data);
@@ -61,20 +52,10 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
       setState(() {
         loading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
+      showAppSnackBar(
+        message: '${response.error}',
         backgroundColor: Colors.red.shade700,
-        elevation: 2.0,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     }
   }
 

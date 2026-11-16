@@ -130,6 +130,7 @@ class _DownloadScholarshipFormsPageState
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.green,
               duration: const Duration(seconds: 5),
+              persist: false,
             ),
           );
         }
@@ -150,6 +151,7 @@ class _DownloadScholarshipFormsPageState
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 5),
+            persist: false,
           ),
         );
       }
@@ -169,7 +171,10 @@ class _DownloadScholarshipFormsPageState
       if (!await file.exists()) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('File not found')),
+            const SnackBar(
+              content: Text('File not found'),
+              duration: Duration(seconds: 5),
+            ),
           );
         }
         return;
@@ -182,7 +187,10 @@ class _DownloadScholarshipFormsPageState
 
         if (result.status == ShareResultStatus.unavailable && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No app available to open this file')),
+            const SnackBar(
+              content: Text('No app available to open this file'),
+              duration: Duration(seconds: 5),
+            ),
           );
         }
       } else {
@@ -192,7 +200,10 @@ class _DownloadScholarshipFormsPageState
       if (mounted) {
         print("Error opening file: ${e}");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error opening file: ${e.toString()}')),
+          SnackBar(
+            content: Text('Error opening file: ${e.toString()}'),
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     }

@@ -60,7 +60,10 @@ class _ApplyScholarshipPageState extends State<ApplyScholarshipPage> {
       debugPrint('Error: $e');
       debugPrint('Stack trace: $stackTrace');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load scholarship types')),
+        const SnackBar(
+          content: Text('Failed to load scholarship types'),
+          duration: Duration(seconds: 5),
+        ),
       );
     } finally {
       setState(() => isFteching = false);
@@ -428,6 +431,7 @@ class _ApplyScholarshipPageState extends State<ApplyScholarshipPage> {
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.green,
               duration: const Duration(seconds: 5),
+              persist: false,
             ),
           );
         }
@@ -448,6 +452,7 @@ class _ApplyScholarshipPageState extends State<ApplyScholarshipPage> {
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 5),
+            persist: false,
           ),
         );
       }
@@ -467,7 +472,10 @@ class _ApplyScholarshipPageState extends State<ApplyScholarshipPage> {
       if (!await file.exists()) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('File not found')),
+            const SnackBar(
+              content: Text('File not found'),
+              duration: Duration(seconds: 5),
+            ),
           );
         }
         return;
@@ -480,7 +488,10 @@ class _ApplyScholarshipPageState extends State<ApplyScholarshipPage> {
 
         if (result.status == ShareResultStatus.unavailable && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No app available to open this file')),
+            const SnackBar(
+              content: Text('No app available to open this file'),
+              duration: Duration(seconds: 5),
+            ),
           );
         }
       } else {
@@ -490,7 +501,10 @@ class _ApplyScholarshipPageState extends State<ApplyScholarshipPage> {
       if (mounted) {
         print("Error opening file: ${e}");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error opening file: ${e.toString()}')),
+          SnackBar(
+            content: Text('Error opening file: ${e.toString()}'),
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     }

@@ -1,4 +1,5 @@
 import 'package:src_kstu_app/components/colors.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 import 'package:src_kstu_app/feature/pages/login_page.dart';
 import 'package:src_kstu_app/models/api_response.dart';
 import 'package:src_kstu_app/services/user_service.dart';
@@ -30,39 +31,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoginPage()),
           (route) => false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Delivered new password to your phone number'),
+      showAppSnackBar(
+        message: 'Delivered new password to your phone number',
         backgroundColor: topColor,
-        behavior: SnackBarBehavior.floating,
-        elevation: 2.0,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     } else {
       // print(jsonEncode(response.data));
       setState(() {
         loading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
+      showAppSnackBar(
+        message: '${response.error}',
         backgroundColor: Colors.red.shade700,
-        elevation: 2.0,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
+      );
     }
   }
 

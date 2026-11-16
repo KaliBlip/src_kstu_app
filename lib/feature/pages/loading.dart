@@ -15,6 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:src_kstu_app/components/app_animations.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 
 class LoadingPage extends ConsumerStatefulWidget {
   const LoadingPage({super.key});
@@ -49,40 +50,23 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => Dashboard()),
               (route) => false);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Welcome back, ${name}'),
+          showAppSnackBar(
+            message: 'Welcome back, ${name ?? ""}',
             backgroundColor: topColor,
-            behavior: SnackBarBehavior.floating,
-            action: SnackBarAction(
-              label: 'Dismiss',
-              disabledTextColor: Colors.white,
-              textColor: Colors.yellow,
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-            ),
-          ));
+          );
         } else if (response.error == unauthorized) {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => LoginPage()),
               (route) => false);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("You have been logged out"),
+          showAppSnackBar(
+            message: "You have been logged out",
             backgroundColor: topColor,
-            behavior: SnackBarBehavior.floating,
-            action: SnackBarAction(
-              label: 'Dismiss',
-              disabledTextColor: Colors.white,
-              textColor: Colors.yellow,
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-            ),
-          ));
+          );
         } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("${response.error}")));
-          // print(response.error);
+          showAppSnackBar(
+            message: "${response.error}",
+            backgroundColor: Colors.red.shade700,
+          );
         }
       }
     }

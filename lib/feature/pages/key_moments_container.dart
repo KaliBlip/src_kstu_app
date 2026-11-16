@@ -67,8 +67,10 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                                 mode: LaunchMode.externalApplication);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text('Could not open the link')),
+                              const SnackBar(
+                                content: Text('Could not open the link'),
+                                duration: Duration(seconds: 5),
+                              ),
                             );
                           }
                         },

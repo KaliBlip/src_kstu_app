@@ -1,4 +1,5 @@
 import 'package:src_kstu_app/components/colors.dart';
+import 'package:src_kstu_app/components/app_snackbar.dart';
 import 'package:src_kstu_app/feature/pages/apply_claims_page.dart';
 import 'package:src_kstu_app/feature/pages/check_claim_status_page.dart';
 import 'package:src_kstu_app/feature/pages/download_claims_forms_page.dart';
@@ -693,19 +694,10 @@ class _SideMenuState extends State<SideMenu> {
                           MaterialPageRoute(builder: (context) => LoginPage()),
                           (route) => false)
                     });
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("You have been logged out"),
+                showAppSnackBar(
+                  message: "You have been logged out",
                   backgroundColor: topColor,
-                  behavior: SnackBarBehavior.floating,
-                  action: SnackBarAction(
-                    label: 'Dismiss',
-                    disabledTextColor: Colors.white,
-                    textColor: Colors.yellow,
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    },
-                  ),
-                ));
+                );
               },
             ),
           ].appStaggered(),
