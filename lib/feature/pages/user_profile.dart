@@ -142,10 +142,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   maxRadius: 60,
                                   minRadius: 60,
                                   backgroundColor: bottomColor,
-                                  backgroundImage: image != "1"
+                                  backgroundImage: (image != null &&
+                                          image!.isNotEmpty &&
+                                          image != "1" &&
+                                          image != "null")
                                       ? NetworkImage(
                                           "${user_img_uri}${image}")
-                                      : NetworkImage(
+                                      : const NetworkImage(
                                           "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                                 ),
                                 SizedBox(

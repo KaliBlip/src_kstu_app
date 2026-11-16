@@ -238,12 +238,15 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 radius: 80.0,
                 backgroundImage: FileImage(pickimage!),
               )
-            : image != '1'
+            : (image != null &&
+                    image.isNotEmpty &&
+                    image != '1' &&
+                    image != 'null')
                 ? CircleAvatar(
                     radius: 80.0,
                     backgroundImage: NetworkImage("${user_img_uri}${image}"),
                   )
-                : CircleAvatar(
+                : const CircleAvatar(
                     radius: 80.0,
                     foregroundColor: Colors.red,
                     backgroundColor: Colors.blue,
