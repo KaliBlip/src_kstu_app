@@ -8,7 +8,6 @@ import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class WelcomeScreenPage extends StatefulWidget {
   const WelcomeScreenPage({super.key});
 
@@ -21,7 +20,7 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
   late Animation<double> animation1;
   late AnimationController controller1;
 
-    Future<void> launchToRegister() async {
+  Future<void> launchToRegister() async {
     await launchUrl(
       Uri.parse('$asset_base_url/user/register'),
     );
@@ -32,40 +31,26 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
     super.initState();
     // Animation & Controller 1
     controller1 = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 2500));
+        vsync: this, duration: const Duration(milliseconds: 2500));
     final CurvedAnimation curvedAnimation1 =
         CurvedAnimation(parent: controller1, curve: Curves.easeInOut);
     animation1 = Tween(begin: 100.0, end: 240.0).animate(curvedAnimation1);
-
 
     controller1.forward();
   }
 
   Widget containerLogo(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: animation1.value,
       height: animation1.value,
       child: Image.asset("assets/images/f.png", fit: BoxFit.contain),
     );
   }
 
-  // Widget textAnimated(BuildContext context) {
-  //   return Text(
-  //           textAlign: TextAlign.center,
-
-  //     "Official Mobile App For KsTU Students",
-  //     style: TextStyle(
-  //         color: bottomColor,
-  //         fontWeight: FontWeight.bold,
-  //         fontSize: animation2.value),
-  //   );
-  // }
-
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     controller1.dispose();
+    super.dispose();
   }
 
   @override
@@ -74,7 +59,7 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
         SimpleFontelicoProgressDialog(context: context);
     return Scaffold(
         backgroundColor: topColor,
-        body: Container(
+        body: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Stack(children: [
               Row(children: [
@@ -90,33 +75,34 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
               Column(
                 children: [
                   Expanded(
-                      flex: 3,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                            color: topColor,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(30))),
-                        child: Column(
-                          mainAxisAlignment:
-                              MainAxisAlignment.center,
-                          crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                          children: [
-                            AnimatedBuilder(
-                                animation: animation1,
-                                builder: (context, child) =>
-                                    containerLogo(context)),
-                            // const SizedBox(
-                            //   height: 25,
-                            // ),
-                            // AnimatedBuilder(
-                            //     animation: animation1,
-                            //     builder: (context, child) =>
-                            //         textAnimated(context)),
-                          ],
-                        ),
-                      )),
+                    flex: 3,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                      ),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          // Background image
+                          Image.asset(
+                            "assets/images/hero_image.jpeg",
+                            fit: BoxFit.cover,
+                          ),
+                          // topColor overlay with opacity
+                          Container(
+                            color: topColor.withOpacity(0.9),
+                          ),
+                          Center(
+                            child: AnimatedBuilder(
+                              animation: animation1,
+                              builder: (context, child) =>
+                                  containerLogo(context),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Consumer(
                       builder: (context, ref, _) {
                     final status = ref.watch(connectivityNotifierProvider);
@@ -133,27 +119,25 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                   horizontal: 18.0, vertical: 15.0),
                               child: Column(
                                 children: [
-                                  Spacer(),
+                                  const Spacer(),
                                   Container(
                                     height: 50,
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                         color: topColor,
                                         borderRadius:
-                                            BorderRadius.circular(
-                                                10)),
+                                            BorderRadius.circular(10)),
                                     child: const Center(
                                       child: Text(
                                         "No internet connection",
                                         style: TextStyle(
                                             color: bottomColor,
                                             fontSize: 20,
-                                            fontWeight:
-                                                FontWeight.bold),
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                 ],
                               ),
                             ),
@@ -182,7 +166,7 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                               SimpleFontelicoProgressDialogType
                                                   .hurricane);
                                       await Future.delayed(
-                                          Duration(seconds: 1));
+                                          const Duration(seconds: 1));
                                       _dialog.hide();
                                       Navigator.push(
                                           context,
@@ -196,16 +180,14 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                       decoration: BoxDecoration(
                                           color: topColor,
                                           borderRadius:
-                                              BorderRadius.circular(
-                                                  10)),
+                                              BorderRadius.circular(10)),
                                       child: Center(
                                         child: Text(
                                           "Tap To Login",
                                           style: GoogleFonts.poppins(
                                               color: bottomColor,
                                               fontSize: 20,
-                                              fontWeight:
-                                                  FontWeight.bold),
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ),
@@ -221,7 +203,7 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                               SimpleFontelicoProgressDialogType
                                                   .hurricane);
                                       await Future.delayed(
-                                          Duration(seconds: 1));
+                                          const Duration(seconds: 1));
                                       _dialog.hide();
                                       launchToRegister();
                                     },
@@ -231,16 +213,14 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                       decoration: BoxDecoration(
                                           color: topColor,
                                           borderRadius:
-                                              BorderRadius.circular(
-                                                  10)),
+                                              BorderRadius.circular(10)),
                                       child: Center(
                                         child: Text(
                                           "Tap To Register",
                                           style: GoogleFonts.poppins(
                                               color: bottomColor,
                                               fontSize: 20,
-                                              fontWeight:
-                                                  FontWeight.bold),
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ),

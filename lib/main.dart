@@ -2,21 +2,46 @@ import 'package:src_kstu_app/feature/pages/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:src_kstu_app/feature/pages/news_details.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize OneSignal
-  OneSignal.Debug.setLogLevel(OSLogLevel.none); // Use verbose only during dev
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize("a8a3a92a-86cd-41b5-8efe-2e5badaf01d0");
-
-  // Opt-in so the SDK registers the device and requests permission on iOS
-  OneSignal.Notifications.requestPermission(true);
+  _listenForNotificationClicks();
 
   runApp(
     const ProviderScope(
       child: MyApp(),
     ),
+  );
+}
+
+
+void _listenForNotificationClicks() {
+  OneSignal.Notifications.addClickListener((event) {
+    final data = event.notification.additionalData;
+    final rawId = data?['announcemet_id'] ?? data?['announcement_id'];
+    if (rawId == null) return;
+    final announcementId =
+        rawId is int ? rawId : int.tryParse(rawId.toString());
+    if (announcementId == null) return;
+    _navigateToAnnouncement(announcementId);
+  });
+}
+
+Future<void> _navigateToAnnouncement(int announcementId) async {
+  var navigator = navigatorKey.currentState;
+  var attempts = 0;
+  while (navigator == null && attempts < 50) {
+    await Future.delayed(const Duration(milliseconds: 100));
+    navigator = navigatorKey.currentState;
+    attempts++;
+  }
+  navigator?.push(
+    MaterialPageRoute(builder: (_) => DetailNews(title: announcementId)),
   );
 }
 
@@ -26,6 +51,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'SRC-KsTU',
       theme: ThemeData(
@@ -41,3 +67,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

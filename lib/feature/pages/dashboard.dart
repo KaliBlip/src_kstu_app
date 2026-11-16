@@ -38,6 +38,7 @@ class _DashboardState extends ConsumerState<Dashboard>
   @override
   initState() {
     _checkConnectivity();
+    requestNotificationPermission(context);
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -48,16 +49,8 @@ class _DashboardState extends ConsumerState<Dashboard>
         parent: _animationController, curve: Curves.fastOutSlowIn));
     scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.fastOutSlowIn));
-
-    // Use post-frame callback to avoid setState during build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        getUser();
-        requestNotificationPermission(context);
-        listenForPushNotifications(context);
-      }
-    });
-
+    getUser();
+    listenForPushNotifications(context);
     super.initState();
   }
 
@@ -71,8 +64,6 @@ class _DashboardState extends ConsumerState<Dashboard>
 
   bool isSideBarClosed = true;
   bool isSideMenuClosed = true;
-  bool _hasRequestedPermission = false;
-  static bool _pushListenerRegistered = false;
 
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -98,7 +89,8 @@ class _DashboardState extends ConsumerState<Dashboard>
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('We need your permission to send you important updates and notifications.'),
+                Text(
+                    'We need your permission to send you important updates and notifications.'),
                 Text('Would you like to enable notifications?'),
               ],
             ),
@@ -122,50 +114,148 @@ class _DashboardState extends ConsumerState<Dashboard>
     );
   }
 
-  void requestNotificationPermission(BuildContext context) async {
-    if (_hasRequestedPermission) return;
-    _hasRequestedPermission = true;
+  Future<void> requestNotificationPermission(BuildContext context) async {
+    try {
+      if (!context.mounted) return;
+      final SharedPreferences localStorage =
+          await SharedPreferences.getInstance();
+      final bool hasRequestedPermissionBefore =
+          localStorage.getBool('notification_permission_requested') ?? false;
 
-    // Already granted at the OS level – nothing to ask.
-    if (OneSignal.Notifications.permission) return;
+      final currentStatus = OneSignal.Notifications.permission;
+      debugPrint("Current notification permission status: $currentStatus");
 
-    // Only show our pre-permission dialog once, ever. After the user has
-    // answered it we respect their choice instead of nagging on every visit.
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('asked_notification_permission') == true) return;
+      if (currentStatus == OSNotificationPermission.authorized) {
+        debugPrint("Notification permission already authorized.");
+        await registerUserForPushNotification();
+        return;
+      }
+      bool? userAgreedToSystemPrompt = hasRequestedPermissionBefore
+          ? true
+          : await _showPrePermissionDialog(context);
 
+      if (userAgreedToSystemPrompt == true) {
+        if (!context.mounted) return;
+
+        await localStorage.setBool('notification_permission_requested', true);
+        final bool permissionWasGranted =
+            await OneSignal.Notifications.requestPermission(true);
+
+        if (permissionWasGranted) {
+          debugPrint("Notification permission granted by user!");
+          await registerUserForPushNotification();
+        } else {
+          debugPrint("Notification permission denied by user or system.");
+          if (context.mounted) {
+            _showPostDenialDialog(context);
+          }
+        }
+      } else {
+        debugPrint(
+            "User declined to see the system notification permission prompt.");
+      }
+    } catch (e) {
+      debugPrint("Error in notification permission flow: $e");
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error requesting permissions: $e")),
+        );
+      }
+    }
+  }
+
+  Future<void> _showPostDenialDialog(BuildContext context) async {
     if (!context.mounted) return;
-    final shouldRequest = await _showPrePermissionDialog(context);
-    await prefs.setBool('asked_notification_permission', true);
-    if (shouldRequest == true) {
-      await OneSignal.Notifications.requestPermission(true);
+
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Notifications Disabled'),
+          content: const Text(
+            'You have disabled notifications. You can enable them later from the app settings if you change your mind.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> registerUserForPushNotification() async {
+    final SharedPreferences localStorage =
+        await SharedPreferences.getInstance();
+    final int? userId = localStorage.getInt('id');
+
+    if (userId == null) {
+      debugPrint(
+          "No userId found in local storage. User might not be logged in.");
+      return;
+    }
+
+    final String externalUserId = userId.toString();
+    debugPrint(
+        "Attempting to login to OneSignal with externalUserId: $externalUserId");
+
+    try {
+      await OneSignal.login(externalUserId);
+      debugPrint("OneSignal.login('$externalUserId') called successfully.");
+    } catch (e) {
+      debugPrint("Error during OneSignal.login: $e");
     }
   }
 
   void listenForPushNotifications(BuildContext context) {
-    // Guard against registering a duplicate listener each time a new Dashboard
-    // instance is pushed (which would navigate once per stale listener).
-    if (_pushListenerRegistered) return;
-    _pushListenerRegistered = true;
+    debugPrint("Setting up OneSignal notification listeners");
 
-    OneSignal.Notifications.addClickListener((event) {
-      final data = event.notification.additionalData;
-      if (data != null && data['announcemet_id'] != null) {
-        final announcementId = data['announcemet_id'];
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailNews(title: announcementId),
-          ),
-        );
+    OneSignal.Notifications.addForegroundWillDisplayListener(
+        (OSNotificationWillDisplayEvent event) async {
+      try {
+        final notification = event.notification;
+        debugPrint(
+            "Foreground notification received: ${notification.notificationId}");
+        await _handleNotificationDisplay(event, notification);
+        await _refreshAnnouncementLists(context);
+      } catch (e, stackTrace) {
+        debugPrint("Error handling notification: $e");
+        debugPrint("Stack trace: $stackTrace");
       }
     });
+  }
+
+  Future<void> _refreshAnnouncementLists(BuildContext context) async {
+    if (!context.mounted) return;
+    await Future.wait([
+      ref.read(noticeBoardNotifierProvider.notifier).fetchNotice(1),
+      ref.read(trendingNewsNotifierProvider.notifier).fetchTrend(1),
+    ]);
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _handleNotificationDisplay(
+    OSNotificationWillDisplayEvent event,
+    OSNotification notification,
+  ) async {
+    event.preventDefault();
+    debugPrint("Prevented default notification display");
+    final shouldShowNotification = true;
+    if (shouldShowNotification) {
+      notification.display();
+      debugPrint("Manually displayed notification");
+    }
   }
 
   void _openAnnouncement(int announcementId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => DetailNews(title: announcementId)),
+      MaterialPageRoute(
+          builder: (context) => DetailNews(title: announcementId)),
     );
   }
 
@@ -174,7 +264,6 @@ class _DashboardState extends ConsumerState<Dashboard>
     final parts = formatted.split(', ');
     return parts.length > 1 ? parts[1] : formatted;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +438,7 @@ class _DashboardState extends ConsumerState<Dashboard>
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
-                      color:  Colors.white,
+                      color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                     ),
@@ -539,9 +628,8 @@ class HeadPicture extends StatelessWidget {
             // drawn on top and, if it fails to load, the asset shows through.
             backgroundImage:
                 const AssetImage("assets/images/student_profile.jpeg"),
-            foregroundImage: _hasImage
-                ? NetworkImage("$user_img_uri$image")
-                : null,
+            foregroundImage:
+                _hasImage ? NetworkImage("$user_img_uri$image") : null,
             onForegroundImageError: _hasImage ? (_, __) {} : null,
           ),
           const Positioned(

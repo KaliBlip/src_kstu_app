@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:src_kstu_app/components/app_animations.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -68,7 +69,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    SimpleFontelicoProgressDialog _dialog =
+    SimpleFontelicoProgressDialog dialog =
         SimpleFontelicoProgressDialog(context: context);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -77,8 +78,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           resizeToAvoidBottomInset: false,
           body: Center(
             child: Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: Container(
+              padding: const EdgeInsets.all(0.0),
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: Stack(children: [
                   Row(children: [
@@ -95,38 +96,34 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     children: [
                       Expanded(
                           flex: 4,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration: const BoxDecoration(
-                                color: topColor,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(30))),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30),
+                            ),
                             child: Stack(
+                              fit: StackFit.expand,
                               children: [
-                                Positioned(
-                                    top: 10,
-                                    left: 10,
-                                    child: IconButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        icon: Icon(
-                                          Icons.arrow_back_ios,
-                                          color: bottomColor,
-                                        ))),
+                                Image.asset(
+                                  "assets/images/hero_image.jpeg",
+                                  fit: BoxFit.cover,
+                                ),
+                                // topColor overlay with opacity
+                                Container(
+                                  color: topColor.withOpacity(0.9),
+                                ),
                                 Center(
                                   child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        width: 200,
+                                      SizedBox(
+                                        width: 280,
                                         child: Image.asset(
-                                          "assets/images/f.png",
+                                          "assets/images/kstu_src_logo.png",
                                           fit: BoxFit.cover,
                                         ),
-                                      ),
+                                      ).appPopIn(duration: AppMotion.slow),
                                       const SizedBox(
                                         height: 25,
                                       ),
@@ -136,8 +133,22 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                             color: bottomColor,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 30),
-                                      )
+                                      ).appEntrance(
+                                          delay:
+                                              const Duration(milliseconds: 200))
                                     ],
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 20,
+                                  left: 10,
+                                  child: IconButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    icon: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: bottomColor,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -152,7 +163,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                     topRight: Radius.circular(30))),
                             child: Form(
                               key: formkey,
-                              child: Column(children: [
+                              child: Column(
+                                  children: [
                                 const SizedBox(
                                   height: 50,
                                 ),
@@ -174,9 +186,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                       hintText: '',
                                       prefixIcon: Icon(Icons.email),
                                       border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          borderSide:
+                                              BorderSide(color: headColor)),
                                     ),
                                   ),
                                 ),
@@ -185,14 +198,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () async {
-                                    _dialog.show(
+                                    dialog.show(
                                         message: 'Sending...',
-                                        type:
-                                            SimpleFontelicoProgressDialogType
-                                                .hurricane);
-                                    await Future.delayed(
-                                        Duration(seconds: 1));
-                                    _dialog.hide();
+                                        type: SimpleFontelicoProgressDialogType
+                                            .hurricane);
+                                    await Future.delayed(Duration(seconds: 1));
+                                    dialog.hide();
                                     if (formkey.currentState!.validate()) {
                                       setState(() {
                                         loading = true;
@@ -222,8 +233,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                                           ? bottomColor
                                                           : bottomColor,
                                                       borderRadius:
-                                                          BorderRadius
-                                                              .circular(20),
+                                                          BorderRadius.circular(
+                                                              20),
                                                     ),
                                                   );
                                                 },
@@ -241,7 +252,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                     ),
                                   ),
                                 )
-                              ]),
+                              ].appStaggered()),
                             ),
                           ))
                     ],

@@ -288,9 +288,8 @@ class _LoginPageState extends State<LoginPage> {
                                     Expanded(
                                         flex: 4,
                                         child: Container(
-                                          width: MediaQuery.of(context)
-                                              .size
-                                              .width,
+                                          width:
+                                              MediaQuery.of(context).size.width,
                                           decoration: const BoxDecoration(
                                               color: topColor,
                                               borderRadius: BorderRadius.only(
@@ -312,12 +311,11 @@ class _LoginPageState extends State<LoginPage> {
                                               const SizedBox(
                                                 height: 25,
                                               ),
-                                               Text(
+                                              Text(
                                                 "No internet connection",
                                                 style: GoogleFonts.poppins(
                                                     color: bottomColor,
-                                                    fontWeight:
-                                                        FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 30),
                                               )
                                             ],
@@ -368,10 +366,9 @@ class _LoginPageState extends State<LoginPage> {
                                     Expanded(
                                         flex: 4,
                                         child: Container(
-                                          width: MediaQuery.of(context)
-                                              .size
-                                              .width,
-                                          decoration: const BoxDecoration(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
                                               color: topColor,
                                               borderRadius: BorderRadius.only(
                                                   bottomLeft:
@@ -382,24 +379,23 @@ class _LoginPageState extends State<LoginPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              Container(
-                                                width: 150,
+                                              SizedBox(
+                                                width: 200,
                                                 child: Image.asset(
-                                                  "assets/images/f.png",
+                                                  "assets/images/kstu_src_logo.png",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
                                               const SizedBox(
-                                                height: 24,
+                                                height: 25,
                                               ),
-                                               Text(
+                                              Text(
                                                 "SIGN IN",
                                                 style: GoogleFonts.poppins(
                                                     color: bottomColor,
-                                                    fontWeight:
-                                                        FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 30),
-                                              ),
+                                              )
                                             ],
                                           ),
                                         )),
@@ -418,10 +414,10 @@ class _LoginPageState extends State<LoginPage> {
                                                 height: isOnTap,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets
-                                                    .symmetric(
-                                                    horizontal: 18.0,
-                                                    vertical: 10),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 18.0,
+                                                        vertical: 10),
                                                 child: TextFormField(
                                                   onTap: () {
                                                     setState(() {
@@ -441,24 +437,24 @@ class _LoginPageState extends State<LoginPage> {
                                                   decoration: InputDecoration(
                                                     contentPadding:
                                                         EdgeInsets.all(10),
-                                                    label: Text("Index Number or Email"),
+                                                    label: Text(
+                                                        "Index Number or Email"),
                                                     hintText: '',
                                                     prefixIcon:
                                                         Icon(Icons.email),
-                                                    border:
-                                                        OutlineInputBorder(
+                                                    border: OutlineInputBorder(
                                                       borderRadius:
-                                                          BorderRadius
-                                                              .circular(10.0),
+                                                          BorderRadius.circular(
+                                                              10.0),
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets
-                                                    .symmetric(
-                                                    horizontal: 18.0,
-                                                    vertical: 10),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 18.0,
+                                                        vertical: 10),
                                                 child: TextFormField(
                                                   onTap: () {
                                                     isOnTap = 20;
@@ -484,8 +480,7 @@ class _LoginPageState extends State<LoginPage> {
                                                         Icon(Icons.lock),
                                                     suffixIcon: IconButton(
                                                       icon: Icon(ispassword
-                                                          ? Icons
-                                                              .visibility_off
+                                                          ? Icons.visibility_off
                                                           : Icons.visibility),
                                                       onPressed: () {
                                                         setState(() {
@@ -494,11 +489,10 @@ class _LoginPageState extends State<LoginPage> {
                                                         });
                                                       },
                                                     ),
-                                                    border:
-                                                        OutlineInputBorder(
+                                                    border: OutlineInputBorder(
                                                       borderRadius:
-                                                          BorderRadius
-                                                              .circular(10.0),
+                                                          BorderRadius.circular(
+                                                              10.0),
                                                     ),
                                                   ),
                                                 ),
@@ -507,9 +501,9 @@ class _LoginPageState extends State<LoginPage> {
                                                 height: 15,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets
-                                                    .symmetric(
-                                                    horizontal: 18.0),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 18.0),
                                                 child: GestureDetector(
                                                   onTap: () async {
                                                     _dialog.show(
@@ -535,8 +529,7 @@ class _LoginPageState extends State<LoginPage> {
                                                         color: topColor,
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(
-                                                                    10)),
+                                                                .circular(10)),
                                                     child: Center(
                                                       child: loading
                                                           ? SpinKitFadingCircle(
@@ -564,8 +557,7 @@ class _LoginPageState extends State<LoginPage> {
                                                               style: GoogleFonts.poppins(
                                                                   color: Colors
                                                                       .white,
-                                                                  fontSize:
-                                                                      20,
+                                                                  fontSize: 20,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold),
@@ -587,8 +579,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       onTap: () async {
                                                         // Show loading dialog
                                                         _dialog.show(
-                                                          message:
-                                                              'Waiting...',
+                                                          message: 'Waiting...',
                                                           type:
                                                               SimpleFontelicoProgressDialogType
                                                                   .hurricane,
@@ -597,7 +588,7 @@ class _LoginPageState extends State<LoginPage> {
                                                             Duration(
                                                                 seconds: 1));
                                                         _dialog.hide();
-              
+
                                                         // Navigate to ForgotPasswordPage and remove all previous routes
                                                         Navigator.of(context).push(
                                                             MaterialPageRoute(
@@ -607,7 +598,8 @@ class _LoginPageState extends State<LoginPage> {
                                                       },
                                                       child: Text(
                                                         'Forgot Password?',
-                                                        style: GoogleFonts.poppins(
+                                                        style:
+                                                            GoogleFonts.poppins(
                                                           fontSize: 18,
                                                           fontWeight:
                                                               FontWeight.bold,
