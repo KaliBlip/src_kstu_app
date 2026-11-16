@@ -18,7 +18,7 @@ Static review of the full `lib/` tree (plus build config) performed while prepar
 | B-08 | 🟠 | Lists | Pull-to-refresh on Notice Board loads Trending News | Open |
 | B-09 | 🟠 | Lists | Infinite scroll loops back to page 1 → endless duplicates | Open |
 | B-10 | 🟠 | News detail | Like button doesn't update UI (cached Riverpod future) | Open |
-| B-11 | 🟠 | Push | Payload key typo `announcemet_id` + stale `BuildContext` in listener | Open |
+| B-11 | 🟠 | Push | Payload key typo `announcemet_id` + stale `BuildContext` in listener | ✅ Fixed in `db4aeca` |
 | B-12 | 🟠 | Welcome | Connectivity check compares unrelated types; SnackBars never shown | ✅ Fixed in `a49fd75` |
 | B-13 | 🟠 | Profile | `_saveupdatedProfile` crashes when `/me` fails; upload errors leave spinner stuck | Open |
 | B-14 | 🟠 | Downloads | Android writes to `/storage/emulated/0/Download` without scoped-storage handling | Open |
@@ -117,8 +117,8 @@ After `POST /post-interact/...`, `setState` rebuilds but `trendingNewsDetailsPro
 ### B-11 — Push-notification navigation is fragile
 **File:** [dashboard.dart:~130-160](file:///Users/kaliblip/Developer/KsTU%20SRC/src_kstu_app/lib/feature/pages/dashboard.dart)
 - Reads `data['announcemet_id']` (missing "n"). Works only if the sender uses the same typo; any correctly spelled payload is silently ignored.
-- The click listener is registered once (static flag) but captures the first `Dashboard`'s `BuildContext`. Dashboard is frequently re-created (`pushReplacement`/`pushAndRemoveUntil` everywhere), so later taps call `Navigator.push` on an unmounted context → exception / no navigation.
-**Fix:** accept both keys; navigate via a global `navigatorKey` instead of a captured context.
+- The click listener was registered once but captured the first `Dashboard`'s `BuildContext`. Dashboard is frequently re-created (`pushReplacement`/`pushAndRemoveUntil`), so later taps called `Navigator.push` on an unmounted context.
+**Fix:** ✅ Fixed in `db4aeca`: moved click listener to `main.dart`, accept both `announcemet_id` and `announcement_id`, and navigate reliably using `navigatorKey`.
 
 ### B-12 — Welcome screen connectivity logic is dead
 **File:** [welcome_screen.dart:~125-131](file:///Users/kaliblip/Developer/KsTU%20SRC/src_kstu_app/lib/feature/pages/welcome_screen.dart)

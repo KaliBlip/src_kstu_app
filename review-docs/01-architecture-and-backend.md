@@ -1,6 +1,6 @@
 # KsTU SRC App — Architecture & Backend Reference
 
-> Scope: Flutter mobile client (`src_kstu_app`, version `1.2.3+7`) and the Laravel REST backend it talks to.
+> Scope: Flutter mobile client (`src_kstu_app`, version `1.2.5+2`) and the Laravel REST backend it talks to.
 > The backend source code is **not** part of this repository; the backend section below is reverse-engineered from the client's network calls.
 
 ---
@@ -282,33 +282,33 @@ Announcement lists are sorted newest-first client-side by `utils/announcement_so
 #### Announcements
 | Method | Path | Response | Notes |
 |---|---|---|---|
-| GET | `/announcements/notice-board?page=N` | `{announcements: {paginator of Announcement}}` | Notice board |
-| GET | `/announcements/trending-news?page=N` | `{announcements: {paginator of Announcement}}` | Trending news |
-| GET | `/announcement/{id}` | `{data: Announcement}` | Detail; increments views server-side (likely) |
-| GET | `/announcement/moments/{announcementId}` | `{data: [AnnouncementKeyMoments]}` | Image gallery / "key moments" |
+| GET | `/announcements/notice-board?page=N` | `{success: true, announcements: {paginator of Announcement}}` | Notice board (page size 5) |
+| GET | `/announcements/trending-news?page=N` | `{success: true, announcements: {paginator of Announcement}}` | Trending news (page size 5) |
+| GET | `/announcement/{id}` | `{status: "success", message, data: Announcement}` | Detail; includes inline key moments |
+| GET | `/announcement/moments/{announcementId}` | `{status: "success", message, data: [AnnouncementKeyMoments]}` | Image gallery / key moments |
 | POST | `/post-interact/announcements/{announcementId}/{status}` | `200` | Like (`status=1`) / unlike (`status=0`) |
 
 #### Campus Map
 | Method | Path | Response |
 |---|---|---|
-| GET | `/campus-map/main-campus-landmarks` | `{campus_landmarks: {paginator of CampusMapModel}}` |
-| GET | `/campus-map/adako-landmarks` | `{campus_landmarks: {paginator of CampusMapModel}}` |
-| GET | `/campus-map/landmark/map/{id}` | `{data: CampusMapModel}` |
-| GET | `/campus-map/landmark/places/{landmarkId}` | `{data: [LandmarkModel]}` |
+| GET | `/campus-map/main-campus-landmarks` | `{success: true, campus_landmarks: {paginator of CampusMapModel}}` |
+| GET | `/campus-map/adako-landmarks` | `{success: true, campus_landmarks: {paginator of CampusMapModel}}` |
+| GET | `/campus-map/landmark/map/{id}` | `{status: "success", message, data: {landmark_url: string}}` |
+| GET | `/campus-map/landmark/places/{landmarkId}` | `{status: "success", message, data: [LandmarkModel]}` |
 
 #### Scholarships
 | Method | Path | Request | Response |
 |---|---|---|---|
-| GET | `/scholarships/types` | — | `{data: {paginator of ScholarshipType}}` |
+| GET | `/scholarships/types` | — | `{success: true, data: {paginator of ScholarshipType}}` |
 | POST | `/scholarships/apply` | multipart: `scholarship_type_id, student_full_name, contact_number, parent_guardian_name, occupation, needy_reason, is_parent_alive (0/1), number_of_siblings, benefited_previously (0/1), student_department, student_programme, student_number, documents[i][file], documents[i][document_type]` | `201 {message}` |
-| GET | `/scholarships/applications` | — | paginator of `ScholarshipApplication` (with `documents[]`) |
+| GET | `/scholarships/applications` | — | `{success: true, data: {paginator of ScholarshipApplication}}` |
 
 #### Insurance Claims
 | Method | Path | Request | Response |
 |---|---|---|---|
-| GET | `/claims/types` | — | `{data: {paginator of ScholarshipType-shaped claim types}}` |
+| GET | `/claims/types` | — | `{success: true, data: {paginator of ScholarshipType-shaped claim types}}` |
 | POST | `/claims/apply` | multipart: `claim_type_id, student_full_name, level, contact_number, name_of_deceased, relation_to_deceased, date_of_death, place_of_death, hospital_name, doctor_name, mortuary_name, religious_body_name, burial_location, burial_date, has_body_been_buried (0/1), date_of_birth, student_department, student_programme, student_number, documents[i][file], documents[i][document_type]` | `201 {message}` |
-| GET | `/claims/applications` | — | `{success, data: {paginator of Claim}}` |
+| GET | `/claims/applications` | — | `{success: true, data: {paginator of Claim}}` |
 
 ### 8.4 Inferred Backend Domain Model
 
